@@ -10,11 +10,12 @@
         Background="Transparent"
         SizeToContent="WidthAndHeight"
         Topmost="True"
-        Opacity="0"
         >
-    <TextBlock x:Name="textblock" FontSize="44" Foreground="White" FontFamily="Meiryo UI">
-        <TextBlock.Effect>
-            <DropShadowEffect BlurRadius="4" Color="Black" ShadowDepth="4" />
-        </TextBlock.Effect>
-    </TextBlock>
+    <Grid x:Name="grid">
+        <TextBlock x:Name="textblock" FontSize="44" Foreground="#FF27CED7" FontFamily="Meiryo UI" Margin="0,0,4,4">
+            <TextBlock.Effect>
+                <DropShadowEffect BlurRadius="4" Color="Black" ShadowDepth="4" />
+            </TextBlock.Effect>
+        </TextBlock>
+    </Grid>
 </Window>

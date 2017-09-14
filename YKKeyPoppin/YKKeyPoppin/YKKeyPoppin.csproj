@@ -65,6 +65,9 @@
     <Compile Include="KeyView.xaml.cs">
       <DependentUpon>KeyView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PoppinStars.xaml.cs">
+      <DependentUpon>PoppinStars.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SystemMenuBehavior.cs" />
     <Compile Include="User32.cs" />
   </ItemGroup>
@@ -99,6 +102,10 @@
     <Page Include="KeyView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PoppinStars.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

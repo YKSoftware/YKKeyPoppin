@@ -1,8 +1,11 @@
 ﻿namespace YKKeyPoppin
 {
     using System;
-    using System.Windows;
-    using System.Windows.Media.Animation;
+using System.Timers;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+    using System.Windows.Threading;
 
     /// <summary>
     /// KeyView.xaml の相互作用ロジック
@@ -14,6 +17,102 @@
             InitializeComponent();
         }
 
+        public KeyView(bool isSpecial)
+            : this()
+        {
+            this.textblock.Foreground = defaultForeground;
+        }
+
+        public KeyView(int count)
+            : this()
+        {
+            UpdateComboMessage(count);
+            this.textblock.FontStyle = FontStyles.Italic;
+
+            this.Left = App.Instance.Bounds.Right - 400;
+            this.Top = App.Instance.Bounds.Top + 80;
+            this._comboTimer = new Timer(4000);
+            this._comboTimer.Elapsed += (_, __) =>
+            {
+                this.Dispatcher.BeginInvoke((Action)(() =>
+                {
+                    this.Visibility = Visibility.Hidden;
+                }), DispatcherPriority.SystemIdle, null);
+
+                this._comboTimer.Stop();
+            };
+        }
+
+        private static SolidColorBrush defaultForeground = new SolidColorBrush(Color.FromArgb(0xff, 0x27, 0xce, 0xd7));
+        private static SolidColorBrush excellentForeground = new SolidColorBrush(Color.FromArgb(0xff, 0x26, 0x83, 0xc6));
+        private static SolidColorBrush superForeground = new SolidColorBrush(Color.FromArgb(0xff, 0xe3, 0x80, 0x25));
+        private static SolidColorBrush amazingForeground = new SolidColorBrush(Color.FromArgb(0xff, 0x5b, 0xe3, 0x2d));
+        private static SolidColorBrush godForeground = new SolidColorBrush(Color.FromArgb(0xff, 0xdb, 0xe3, 0x2d));
+
+        public void SetCount(int count)
+        {
+            if (count < 2)
+            {
+                this.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                this._comboTimer.Stop();
+                this._comboTimer.Start();
+                this.Visibility = Visibility.Visible;
+                UpdateComboMessage(count);
+
+                if (count > 20)
+                {
+                    var x = (0.6 * rand.NextDouble() + 0.2) * this.ActualWidth;
+                    var y = (0.6 * rand.NextDouble() + 0.2) * this.ActualHeight;
+                    PoppinStars.LetsPoppin(this.grid, new Point(x, y));
+                }
+            }
+        }
+
+        private Timer _comboTimer;
+
+        private void UpdateComboMessage(int count)
+        {
+            var str = string.Format(count.ToString() + " Combo");
+            if (count <= 0)
+            {
+                str = "";
+                this.textblock.Foreground = defaultForeground;
+            }
+            else if (count > 200)
+            {
+                str += "\r\nOH MY GOD!!";
+                this.textblock.Foreground = godForeground;
+            }
+            else if (count > 100)
+            {
+                str += "\r\nAmazing!";
+                this.textblock.Foreground = amazingForeground;
+            }
+            else if (count > 50)
+            {
+                str += "\r\nSuper!";
+                this.textblock.Foreground = superForeground;
+            }
+            else if (count > 20)
+            {
+                str += "\r\nExcellent!";
+                this.textblock.Foreground = excellentForeground;
+            }
+            else if (count > 10)
+            {
+                str += "\r\nGreat!";
+                this.textblock.Foreground = defaultForeground;
+            }
+            else
+            {
+                this.textblock.Foreground = defaultForeground;
+            }
+            this.textblock.Text = str;
+        }
+
         private static readonly Random rand = new Random();
 
         public void SetString(User32.VKs key)
@@ -21,6 +120,7 @@
             this.textblock.Text = key.ChangeString();
             this.Left = key.GetPosition();
             this.Top = App.Instance.Bounds.Bottom;
+            this.Opacity = 0;
 
             var appearTime = 300;
             var disappearTime = 200;
