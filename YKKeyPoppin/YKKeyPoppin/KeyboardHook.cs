@@ -3,6 +3,7 @@
     using System;
     using System.Diagnostics;
     using System.Runtime.InteropServices;
+    using Forms = System.Windows.Forms;
 
     /// <summary>
     /// キーボードフックをおこなうためのクラスを表します。

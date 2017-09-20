@@ -380,6 +380,11 @@
             WM_KEYUP = 0x0101,
 
             /// <summary>
+            /// WindowMessage - WM_CHAR
+            /// </summary>
+            WM_CHAR = 0x0102,
+
+            /// <summary>
             /// WindowMessage - WM_SYSKEYDOWN
             /// </summary>
             WM_SYSKEYDOWN = 0x0104,

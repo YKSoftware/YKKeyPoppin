@@ -1,7 +1,25 @@
 ﻿namespace YKKeyPoppin
 {
+    using System.Collections.Generic;
+    using System.Windows.Input;
+
     internal static class Extensions
     {
+        public static string GetString(this Dictionary<KeyInfo, string> dic, KeyInfo info)
+        {
+            var keyOnly = new KeyInfo() { Key = info.Key };
+            if (dic.ContainsKey(info))
+            {
+                return dic[info];
+            }
+            else if ((info.ModifierKeys != ModifierKeys.None) && dic.ContainsKey(keyOnly))
+            {
+                return info.ModifierKeys.ToString() + "+" + dic[keyOnly];
+            }
+
+            return info.Key.ChangeString();
+        }
+
         public static string ChangeString(this User32.VKs key)
         {
             switch (key)

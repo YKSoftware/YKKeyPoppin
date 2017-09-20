@@ -1,11 +1,13 @@
 ﻿namespace YKKeyPoppin
 {
     using System;
+using System.Collections.Generic;
 using System.Timers;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-    using System.Windows.Threading;
+using System.Windows.Threading;
 
     /// <summary>
     /// KeyView.xaml の相互作用ロジック
@@ -43,7 +45,9 @@ using System.Windows.Media.Animation;
             };
         }
 
-        private static SolidColorBrush defaultForeground = new SolidColorBrush(Color.FromArgb(0xff, 0x27, 0xce, 0xd7));
+        internal static Dictionary<KeyInfo, string> KeysDictionary { get; set; }
+
+        private static SolidColorBrush defaultForeground = new SolidColorBrush(Color.FromArgb(0xff, 0xff, 0x7f, 0x50));
         private static SolidColorBrush excellentForeground = new SolidColorBrush(Color.FromArgb(0xff, 0x26, 0x83, 0xc6));
         private static SolidColorBrush superForeground = new SolidColorBrush(Color.FromArgb(0xff, 0xe3, 0x80, 0x25));
         private static SolidColorBrush amazingForeground = new SolidColorBrush(Color.FromArgb(0xff, 0x5b, 0xe3, 0x2d));
@@ -115,14 +119,15 @@ using System.Windows.Media.Animation;
 
         private static readonly Random rand = new Random();
 
-        public void SetString(User32.VKs key)
+        public void SetString(User32.VKs key, ModifierKeys modifierkeys)
         {
-            this.textblock.Text = key.ChangeString();
+            this.textblock.Text = KeysDictionary != null ? KeysDictionary.GetString(new KeyInfo() { Key = key, ModifierKeys = modifierkeys }) : key.ChangeString();
             this.Left = key.GetPosition();
             this.Top = App.Instance.Bounds.Bottom;
             this.Opacity = 0;
 
-            var appearTime = 300;
+            var distance = 500;
+            var appearTime = 500;
             var disappearTime = 200;
 
             var storyboard = new Storyboard();
@@ -135,9 +140,8 @@ using System.Windows.Media.Animation;
             storyboard.Children.Add(shiftAnimation);
 
             var moveAnimation = new DoubleAnimation();
-            //moveAnimation.By = -20;// -App.Instance.Bounds.Height / 5.0;
             moveAnimation.From = App.Instance.Bounds.Bottom;
-            moveAnimation.To = App.Instance.Bounds.Bottom - 200;
+            moveAnimation.To = App.Instance.Bounds.Bottom - distance;
             moveAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(appearTime));
             moveAnimation.AccelerationRatio = 0.6;
             Storyboard.SetTarget(moveAnimation, this);
@@ -163,7 +167,13 @@ using System.Windows.Media.Animation;
             Storyboard.SetTargetProperty(closingOpacityAnimation, new PropertyPath("Opacity"));
             storyboard.Children.Add(closingOpacityAnimation);
 
-            storyboard.Completed += (s, e) => this.Close();
+            storyboard.Completed += (s, e) =>
+            {
+                this.Dispatcher.BeginInvoke((Action)(() =>
+                {
+                    this.Close();
+                }), DispatcherPriority.SystemIdle, null);
+            };
             storyboard.Begin(this);
         }
     }
