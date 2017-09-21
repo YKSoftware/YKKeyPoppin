@@ -1,4 +1,4 @@
-﻿namespace YKKeyPoppin
+﻿namespace YKKeyPoppin.Views
 {
     using System;
     using System.Linq;
@@ -18,6 +18,8 @@
         {
             InitializeComponent();
         }
+
+        private static Random rand = new Random();
 
         #region 依存関係プロパティ
 
@@ -47,37 +49,34 @@
 
         #endregion 依存関係プロパティ
 
-        #region LetsPoppin 添付プロパティ
+        #region Count 添付プロパティ
 
-        public static readonly DependencyProperty LetsPoppinProperty = DependencyProperty.RegisterAttached("LetsPoppin", typeof(bool), typeof(PoppinStars), new PropertyMetadata(false, OnLetsPoppinPropertyChanged));
+        public static readonly DependencyProperty CountProperty = DependencyProperty.RegisterAttached("Count", typeof(int), typeof(PoppinStars), new PropertyMetadata(0, OnCountPropertyChanged));
 
-        public static bool GetLetsPoppin(DependencyObject target)
+        public static int GetCount(DependencyObject target)
         {
-            return (bool)target.GetValue(LetsPoppinProperty);
+            return (int)target.GetValue(CountProperty);
         }
 
-        public static void SetLetsPoppin(DependencyObject target, bool value)
+        public static void SetCount(DependencyObject target, int value)
         {
-            target.SetValue(LetsPoppinProperty, value);
+            target.SetValue(CountProperty, value);
         }
 
-        private static void OnLetsPoppinPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnCountPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            var w = d as Window;
-            var panel = w == null ? (d as Panel) as FrameworkElement : w as FrameworkElement;
-            if (panel == null) return;
+            var element = sender as FrameworkElement;
+            if (element == null) return;
 
-            if (GetLetsPoppin(panel))
+            if (GetCount(element) >= 20)
             {
-                panel.PreviewMouseLeftButtonDown += OnPreviewMouseLeftButtonDown;
-            }
-            else
-            {
-                panel.PreviewMouseLeftButtonDown -= OnPreviewMouseLeftButtonDown;
+                var x = (0.6 * rand.NextDouble() + 0.2) * element.ActualWidth;
+                var y = (0.6 * rand.NextDouble() + 0.2) * element.ActualHeight;
+                PoppinStars.LetsPoppin(element, new Point(x, y));
             }
         }
 
-        #endregion LetsPoppin 添付プロパティ
+        #endregion Count 添付プロパティ
 
         #region Size 添付プロパティ
 
@@ -94,12 +93,6 @@
         }
 
         #endregion Size 添付プロパティ
-
-        private static void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            var pt = e.GetPosition(sender as IInputElement);
-            var adorner = new PoppinAdorner(sender as UIElement, pt);
-        }
 
         public static void LetsPoppin(UIElement element, Point point)
         {

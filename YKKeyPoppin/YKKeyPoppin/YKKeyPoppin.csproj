@@ -64,26 +64,29 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ConfView.xaml.cs">
+    <Compile Include="Models\KeyCollector.cs" />
+    <Compile Include="Models\KeyHook.cs" />
+    <Compile Include="Models\Settings.cs" />
+    <Compile Include="Core\Extensions.cs" />
+    <Compile Include="Models\KeyInfo.cs" />
+    <Compile Include="ViewModels\ComboViewModel.cs" />
+    <Compile Include="ViewModels\ConfViewModel.cs" />
+    <Compile Include="Views\Behaviors\ToolWindowBehavior.cs" />
+    <Compile Include="Views\ComboView.xaml.cs">
+      <DependentUpon>ComboView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ConfView.xaml.cs">
       <DependentUpon>ConfView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Extensions.cs" />
-    <Compile Include="GraphView.xaml.cs">
-      <DependentUpon>GraphView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="InfoView.xaml.cs">
-      <DependentUpon>InfoView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="KeyboardHook.cs" />
-    <Compile Include="KeyInfo.cs" />
-    <Compile Include="KeyView.xaml.cs">
+    <Compile Include="Views\Converters\ComboToBrushConverter.cs" />
+    <Compile Include="Views\KeyView.xaml.cs">
       <DependentUpon>KeyView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PoppinStars.xaml.cs">
+    <Compile Include="Views\Componets\PoppinStars.xaml.cs">
       <DependentUpon>PoppinStars.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SystemMenuBehavior.cs" />
-    <Compile Include="User32.cs" />
+    <Compile Include="Core\SystemMenuBehavior.cs" />
+    <Compile Include="Views\Componets\WpfNotifyIcon.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -113,29 +116,25 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="ConfView.xaml">
+    <Page Include="Views\ComboView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="GraphView.xaml">
+    <Page Include="Views\ConfView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="InfoView.xaml">
+    <Page Include="Views\KeyView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="KeyView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="PoppinStars.xaml">
+    <Page Include="Views\Componets\PoppinStars.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="icon.ico" />
+    <Resource Include="Views\Resources\icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

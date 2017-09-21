@@ -1,0 +1,19 @@
+﻿<Window x:Class="YKKeyPoppin.Views.KeyView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:b="clr-namespace:YKKeyPoppin.Views.Behaviors"
+        b:ToolWindowBehavior.IsEnabled="True"
+        Title="KeyView"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        SizeToContent="WidthAndHeight"
+        Topmost="True"
+        ShowActivated="False"
+        >
+    <TextBlock x:Name="textblock" Margin="10">
+        <TextBlock.BitmapEffect>
+            <DropShadowBitmapEffect Color="Black" ShadowDepth="4" />
+        </TextBlock.BitmapEffect>
+    </TextBlock>
+</Window>

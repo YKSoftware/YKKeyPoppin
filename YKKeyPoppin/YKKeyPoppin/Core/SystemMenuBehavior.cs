@@ -3,6 +3,7 @@
     using System;
     using System.Windows;
     using System.Windows.Interop;
+    using YKToolkit.Controls;
 
     /// <summary>
     /// Window クラスのシステムメニューの有効/無効を設定するためのビヘイビアを表します。
@@ -42,13 +43,13 @@
         /// <param name="e">イベント引数</param>
         private static void OnIsEnabledPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            var window = sender as Window;
+            var window = sender as System.Windows.Window;
             if (window == null)
                 return;
 
             window.SourceInitialized += (obj, args) =>
             {
-                var w = obj as Window;
+                var w = obj as System.Windows.Window;
                 if (w == null)
                     return;
 

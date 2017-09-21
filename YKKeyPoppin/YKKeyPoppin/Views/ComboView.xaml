@@ -1,0 +1,124 @@
+﻿<Window x:Class="YKKeyPoppin.Views.ComboView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vw="clr-namespace:YKKeyPoppin.Views"
+        xmlns:c="clr-namespace:YKKeyPoppin.Views.Converters"
+        xmlns:b="clr-namespace:YKKeyPoppin.Views.Behaviors"
+        b:ToolWindowBehavior.IsEnabled="True"
+        Title="ComboView"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        SizeToContent="WidthAndHeight"
+        Topmost="True"
+        >
+    <Window.Resources>
+        <c:ComboToBrushConverter x:Key="ComboToBrushConverter" />
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="44" />
+            <Setter Property="Foreground" Value="{Binding ComboLevel, Converter={StaticResource ComboToBrushConverter}}" />
+            <Setter Property="FontStyle" Value="Italic" />
+            <Setter Property="BitmapEffect">
+                <Setter.Value>
+                    <DropShadowBitmapEffect Color="Black" ShadowDepth="4" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="10" vw:PoppinStars.Count="{Binding Combo}">
+        <vw:WpfNotifyIcon IconPath="pack://application:,,,/YKKeyPoppin;component/Views/Resources/icon.ico"
+                          Visibility="Visible"
+                          Text="{Binding Title}">
+            <Border Background="{DynamicResource DefaultWindowBackgroundBrush}" BorderThickness="1" Padding="4" Width="300">
+                <Border.BorderBrush>
+                    <LinearGradientBrush>
+                        <GradientStop Color="{DynamicResource WindowBorderColor}" />
+                    </LinearGradientBrush>
+                </Border.BorderBrush>
+                <DockPanel TextBlock.Foreground="{DynamicResource DefaultForegroundBrush}">
+                    <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Width="80" Margin="0,10,10,10" Content="設定" Command="{Binding ConfCommand}" />
+                        <Button Width="80" Margin="0,10,10,10" Content="詳細" Command="{Binding CollectCommand}" />
+                    </StackPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="Top 5 Keys :" Margin="4" />
+                    <ItemsControl ItemsSource="{Binding Top5Keys}" Margin="6,0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBlock Text="{Binding Key, StringFormat='{}No.{0}'}" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0" />
+                                    <Viewbox Stretch="Uniform" StretchDirection="DownOnly" Width="120">
+                                        <Border BorderThickness="2,2,3,3" CornerRadius="4" Padding="10,6" Margin="5">
+                                            <Border.BorderBrush>
+                                                <LinearGradientBrush>
+                                                    <GradientStop Color="{DynamicResource WindowBorderColor}" />
+                                                </LinearGradientBrush>
+                                            </Border.BorderBrush>
+                                            <TextBlock Text="{Binding Value.Key}" FontSize="20" />
+                                        </Border>
+                                    </Viewbox>
+                                    <TextBlock VerticalAlignment="Center" Margin="10,0,0,0">
+                                            <Run Text="{Binding Value.Value, Mode=OneWay}" FontSize="16" />
+                                            <Run Text=" Hits" FontSize="12" />
+                                    </TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </DockPanel>
+            </Border>
+        </vw:WpfNotifyIcon>
+
+        <StackPanel>
+            <TextBlock>
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                        <Setter Property="Text" Value="{Binding Combo, StringFormat='{}{0} Combo'}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsCombo}" Value="False">
+                                <Setter Property="Text" Value="" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            <TextBlock FontSize="32" Margin="80,-20,0,0">
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                        <Setter Property="Text" Value="{Binding Chain, StringFormat='{}+{0} Chain'}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Chain}" Value="0">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Setter Property="Text" Value="" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            <TextBlock Margin="0,-20,0,0">
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                        <Setter Property="Text" Value="OH MY GOD!!" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ComboLevel}" Value="0">
+                                <Setter Property="Text" Value="" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ComboLevel}" Value="1">
+                                <Setter Property="Text" Value="Great" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ComboLevel}" Value="2">
+                                <Setter Property="Text" Value="Excellent!" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ComboLevel}" Value="3">
+                                <Setter Property="Text" Value="Super!" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ComboLevel}" Value="4">
+                                <Setter Property="Text" Value="Amazing!" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </StackPanel>
+    </Grid>
+</Window>
