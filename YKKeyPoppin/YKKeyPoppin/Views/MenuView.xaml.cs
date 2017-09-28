@@ -3,11 +3,11 @@
     using YKToolkit.Controls;
 
     /// <summary>
-    /// ConfView.xaml の相互作用ロジック
+    /// MenuView.xaml の相互作用ロジック
     /// </summary>
-    public partial class ConfView : Window
+    public partial class MenuView : Window
     {
-        public ConfView()
+        public MenuView()
         {
             InitializeComponent();
         }

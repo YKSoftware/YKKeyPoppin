@@ -38,18 +38,8 @@
             this._mouseHook.MouseMiddleButtonUp += OnMouseUp;
             this._mouseHook.Hook();
 
-            this._menuWindow = new System.Windows.Window()
-            {
-                SizeToContent = SizeToContent.WidthAndHeight,
-                WindowStyle = WindowStyle.None,
-                ResizeMode = ResizeMode.NoResize,
-                ShowInTaskbar = false,
-                AllowsTransparency = true,
-                Background = Brushes.Transparent,
-                Topmost = true,
-            };
-            this._menuWindow.PreviewMouseDown += OnMenuWindowPreviewMouseDown;
-            this.DataContextChanged += OnDataContextChanged;
+            if (instance != null) throw new Exception("1 つのアプリで複数のインスタンスを持つことを考慮した実装になっていません。");
+            instance = this;
         }
 
         /// <summary>
@@ -57,39 +47,42 @@
         /// </summary>
         /// <param name="iconPath">タスクトレイに表示するアイコン画像のパスを指定します。</param>
         /// <param name="toolTipText">アイコンのツールチップに表示するテキストを指定します。</param>
-        /// <param name="element">アイコンを右クリックしたときに表示するコンテンツを指定します。</param>
-        public WpfNotifyIcon(string iconPath, string toolTipText, FrameworkElement element)
+        /// <param name="window">アイコンを右クリックしたときに表示するコンテンツを指定します。</param>
+        public WpfNotifyIcon(string iconPath, string toolTipText, System.Windows.Window window)
             : this()
         {
             this.IconPath = iconPath;
             this.Text = toolTipText;
-            this.Content = element;
+            this.Content = window;
         }
+
+        /// <summary>
+        /// インスタンスの保持
+        /// WpfNotifyIcon のインスタンスはアプリ上に 1 個しかないことを前提としています。
+        /// 複数のインスタンスを持つ場合は修正が必要です。
+        /// </summary>
+        private static WpfNotifyIcon instance;
 
         /// <summary>
         /// リソースを破棄します。
         /// </summary>
-        internal void Dispose()
+        public static void Dispose()
         {
-            if (this._mouseHook != null)
-            {
-                this._mouseHook.MouseLeftButtonUp -= OnMouseUp;
-                this._mouseHook.MouseRightButtonUp -= OnMouseUp;
-                this._mouseHook.MouseMiddleButtonUp -= OnMouseUp;
-                this._mouseHook = null;
-            }
-            this._notify.Dispose();
-            this._menuWindow.Close();
-        }
+            if (instance == null) return;
 
-        /// <summary>
-        /// DataContext プロパティ変更イベントハンドラ
-        /// </summary>
-        /// <param name="sender">イベント発行元</param>
-        /// <param name="e">イベント引数</param>
-        private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            this._menuWindow.DataContext = this.DataContext;
+            if (instance._mouseHook != null)
+            {
+                instance._mouseHook.MouseLeftButtonUp -= instance.OnMouseUp;
+                instance._mouseHook.MouseRightButtonUp -= instance.OnMouseUp;
+                instance._mouseHook.MouseMiddleButtonUp -= instance.OnMouseUp;
+                instance._mouseHook = null;
+            }
+            instance._notify.Dispose();
+            if (instance.Content != null)
+            {
+                instance.Content.PreviewMouseDown -= instance.OnContentPreviewMouseDown;
+                instance.Content.Close();
+            }
         }
 
         /// <summary>
@@ -102,24 +95,13 @@
             if (e.Button == Forms.MouseButtons.Right)
             {
                 // アイコンを右クリックされたとき
-                if (this._menuWindow != null)
+                if (this.Content != null)
                 {
-                    this._menuWindow.Content = this.Content;
-                    this._menuWindow.Show();
-                    this._menuWindow.Left = this._mouseReleasePoint.X - this._menuWindow.ActualWidth;
-                    this._menuWindow.Top = this._mouseReleasePoint.Y - this._menuWindow.ActualHeight;
+                    this.Content.Show();
+                    this.Content.Left = this._mouseReleasePoint.X - this.Content.ActualWidth;
+                    this.Content.Top = this._mouseReleasePoint.Y - this.Content.ActualHeight;
                 }
             }
-        }
-
-        /// <summary>
-        /// MenuWindow 上でマウスボタンを押したときのイベントハンドラ
-        /// </summary>
-        /// <param name="sender">イベント発行元</param>
-        /// <param name="e">イベント引数</param>
-        private void OnMenuWindowPreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            this._canClose = false;
         }
 
         /// <summary>
@@ -132,8 +114,7 @@
 
             if (this._canClose)
             {
-                this._menuWindow.Hide();
-                //this._mouseHook.UnHook();
+                if (this.Content != null) this.Content.Hide();
             }
 
             this._canClose = true;
@@ -168,14 +149,41 @@
             }
         }
 
-        public static readonly DependencyProperty ContentProperty = DependencyProperty.Register("Content", typeof(object), typeof(WpfNotifyIcon), new UIPropertyMetadata(null));
+        public static readonly DependencyProperty ContentProperty = DependencyProperty.Register("Content", typeof(System.Windows.Window), typeof(WpfNotifyIcon), new UIPropertyMetadata(null, (s, e) => (s as WpfNotifyIcon).OnContentPropertyChanged(e.OldValue as System.Windows.Window, e.NewValue as System.Windows.Window)));
         /// <summary>
         /// アイコンを右クリックしたときに表示するコンテンツを取得または設定します。
         /// </summary>
-        public object Content
+        public System.Windows.Window Content
         {
-            get { return GetValue(ContentProperty); }
+            get { return (System.Windows.Window)GetValue(ContentProperty); }
             set { SetValue(ContentProperty, value); }
+        }
+
+        /// <summary>
+        /// Content プロパティ変更イベントハンドラ
+        /// </summary>
+        /// <param name="oldValue">変更前の値</param>
+        /// <param name="newValue">変更後の値</param>
+        private void OnContentPropertyChanged(System.Windows.Window oldValue, System.Windows.Window newValue)
+        {
+            if (oldValue != null)
+            {
+                oldValue.PreviewMouseDown -= OnContentPreviewMouseDown;
+            }
+            if (newValue != null)
+            {
+                newValue.PreviewMouseDown += OnContentPreviewMouseDown;
+            }
+        }
+
+        /// <summary>
+        /// Content プロパティで指定されたウィンドウ上でマウスボタンを押したときのイベントハンドラ
+        /// </summary>
+        /// <param name="sender">イベント発行元</param>
+        /// <param name="e">イベント引数</param>
+        private void OnContentPreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            this._canClose = false;
         }
 
         /// <summary>
@@ -240,11 +248,6 @@
         /// マウスフックで閉じていいかどうか判定する
         /// </summary>
         private bool _canClose;
-
-        /// <summary>
-        /// 右クリックメニューを表示するためのウィンドウ
-        /// </summary>
-        private System.Windows.Window _menuWindow;
 
         /// <summary>
         /// マウスを離したときのスクリーン座標

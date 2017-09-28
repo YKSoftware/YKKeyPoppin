@@ -2,7 +2,7 @@
 {
     using YKToolkit.Bindings;
 
-    internal class ConfViewModel : NotificationObject
+    internal class AggregationViewModel : NotificationObject
     {
     }
 }

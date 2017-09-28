@@ -1,0 +1,154 @@
+﻿<UserControl x:Class="YKKeyPoppin.Views.GraphView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:c="clr-namespace:YKKeyPoppin.Views.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <c:ValueToHeightConverter x:Key="ValueToHeightConverter" />
+        <c:KeyInfoToKeyStringConverter x:Key="KeyInfoToKeyStringConverter" />
+        <c:ModifierKeyInKeyInfoToVisibilityConverter x:Key="ModifierKeyInKeyInfoToVisibilityConverter" />
+        <SolidColorBrush x:Key="borderBrush" Color="{DynamicResource BorderColor}" />
+    </UserControl.Resources>
+
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="4">
+            <TextBlock Text="Graph :" Margin="0,0,10,0" VerticalAlignment="Center" />
+            <CheckBox Content="ヒット数順" IsChecked="{Binding IsOrder}" Margin="0,0,4,0" VerticalAlignment="Center" />
+        </StackPanel>
+        <ItemsControl ItemsSource="{Binding AggregatedKeys}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.Template>
+                <ControlTemplate TargetType="{x:Type ItemsControl}">
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden" Padding="0,0,0,10">
+                        <ItemsPresenter />
+                    </ScrollViewer>
+                </ControlTemplate>
+            </ItemsControl.Template>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Background="Transparent">
+                        <Border Width="28" Height="200" Padding="4,0">
+                            <StackPanel VerticalAlignment="Bottom">
+                                <Viewbox StretchDirection="DownOnly">
+                                    <TextBlock Text="{Binding Value}" TextAlignment="Center" />
+                                </Viewbox>
+                                <Rectangle x:Name="rectangle" Width="10" Height="0">
+                                    <Rectangle.Style>
+                                        <Style TargetType="{x:Type Rectangle}">
+                                            <Setter Property="Fill">
+                                                <Setter.Value>
+                                                    <SolidColorBrush Color="{DynamicResource WindowBorderColor}" />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </Rectangle.Style>
+                                    <Rectangle.Triggers>
+                                        <EventTrigger RoutedEvent="Loaded">
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="Height"
+                                                                     To="{Binding Ratio, Converter={StaticResource ValueToHeightConverter}, ConverterParameter=160}"
+                                                                     BeginTime="0:0:0.2"
+                                                                     Duration="0:0:1"
+                                                                     AccelerationRatio="0.2"
+                                                                     DecelerationRatio="0.8"
+                                                                     />
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </Rectangle.Triggers>
+                                </Rectangle>
+                            </StackPanel>
+                        </Border>
+                        <Border CornerRadius="10" BorderThickness="1" BorderBrush="{StaticResource borderBrush}" Padding="0" Margin="2,4,2,0" Width="18" Height="18" Visibility="{Binding Key, Converter={StaticResource ModifierKeyInKeyInfoToVisibilityConverter}, ConverterParameter='C'}">
+                            <TextBlock Text="C" TextAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <Border CornerRadius="10" BorderThickness="1" BorderBrush="{StaticResource borderBrush}" Padding="0" Margin="2,4,2,0" Width="18" Height="18" Visibility="{Binding Key, Converter={StaticResource ModifierKeyInKeyInfoToVisibilityConverter}, ConverterParameter='S'}">
+                            <TextBlock Text="S" TextAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <Border CornerRadius="10" BorderThickness="1" BorderBrush="{StaticResource borderBrush}" Padding="0" Margin="2,4,2,0" Width="18" Height="18" Visibility="{Binding Key, Converter={StaticResource ModifierKeyInKeyInfoToVisibilityConverter}, ConverterParameter='A'}">
+                            <TextBlock Text="A" TextAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <Border CornerRadius="10" BorderThickness="1" BorderBrush="{StaticResource borderBrush}" Padding="0" Margin="2,4,2,0" Width="18" Height="18" Visibility="{Binding Key, Converter={StaticResource ModifierKeyInKeyInfoToVisibilityConverter}, ConverterParameter='W'}">
+                            <TextBlock Text="W" TextAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <Border CornerRadius="4" BorderThickness="1" BorderBrush="{StaticResource borderBrush}" Padding="0" Margin="2,4,2,0" Width="20" Height="20">
+                            <Viewbox StretchDirection="DownOnly">
+                                <TextBlock Text="{Binding Key, Converter={StaticResource KeyInfoToKeyStringConverter}}" TextAlignment="Center" />
+                            </Viewbox>
+                        </Border>
+                    </StackPanel>
+                    <DataTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="False">
+                            <Setter Property="RenderTransformOrigin" Value="0.5,1.0" />
+                            <Setter Property="RenderTransform">
+                                <Setter.Value>
+                                    <ScaleTransform ScaleX="1" ScaleY="1" />
+                                </Setter.Value>
+                            </Setter>
+                            <Trigger.EnterActions>
+                                <BeginStoryboard x:Name="mouseLeaveBeginStoryboard">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleX)"
+                                                         From="1.1"
+                                                         Duration="0:0:0.2"
+                                                         />
+                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleY)"
+                                                         From="1.1"
+                                                         Duration="0:0:0.2"
+                                                         />
+                                        <ColorAnimation Storyboard.TargetName="rectangle"
+                                                        Storyboard.TargetProperty="Fill.Color"
+                                                        From="Plum"
+                                                        Duration="0:0:0.2"
+                                                        />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <StopStoryboard BeginStoryboardName="mouseLeaveBeginStoryboard" />
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="RenderTransformOrigin" Value="0.5,1.0" />
+                            <Setter Property="RenderTransform">
+                                <Setter.Value>
+                                    <ScaleTransform ScaleX="1" ScaleY="1" />
+                                </Setter.Value>
+                            </Setter>
+                            <Trigger.EnterActions>
+                                <BeginStoryboard x:Name="mouseOverBeginStoryboard">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleX)"
+                                                         To="1.1"
+                                                         Duration="0:0:0.2"
+                                                         />
+                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleY)"
+                                                         To="1.1"
+                                                         Duration="0:0:0.2"
+                                                         />
+                                        <ColorAnimation Storyboard.TargetName="rectangle"
+                                                        Storyboard.TargetProperty="Fill.Color"
+                                                        To="Plum"
+                                                        Duration="0:0:0.2"
+                                                        />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <StopStoryboard BeginStoryboardName="mouseOverBeginStoryboard" />
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </DataTemplate.Triggers>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </DockPanel>
+</UserControl>

@@ -37,7 +37,6 @@
                 this._isChain = false;
             }
             this._comboTimer.Restart();
-            RaisePropertyChanged("Top5Keys");
         }
 
         /// <summary>
@@ -55,7 +54,7 @@
         /// <summary>
         /// タイトルを取得します。
         /// </summary>
-        public string Title { get { return this._productInfo.Title; } }
+        public string Title { get { return this._productInfo.Title + " Ver." + this._productInfo.VersionString; } }
 
         /// <summary>
         /// コンボ成立かどうかを取得します。
@@ -121,51 +120,5 @@
         /// チェイントリガ記憶
         /// </summary>
         private bool _isChain;
-
-        /// <summary>
-        /// キー集計
-        /// </summary>
-        private KeyCollector _collector = new KeyCollector();
-
-        /// <summary>
-        /// 押された回数上位 5 個のキーをインデックス付きで取得します。
-        /// </summary>
-        public IEnumerable<KeyValuePair<int, KeyValuePair<KeyInfo, int>>> Top5Keys
-        {
-            get
-            {
-                return this._collector.KeyCollection.OrderByDescending(x => x.Value).Where(x => !x.Key.Key.IsModifierKey()).Take(5).Select((x, i) => new KeyValuePair<int, KeyValuePair<KeyInfo, int>>(i + 1, x));
-            }
-        }
-
-        private DelegateCommand _collectCommand;
-        /// <summary>
-        /// 集計コマンドを取得します。
-        /// </summary>
-        public DelegateCommand CollectCommand
-        {
-            get
-            {
-                return this._collectCommand ?? (this._collectCommand = new DelegateCommand(_ =>
-                {
-                    // 別ウィンドウで詳細情報を表示する
-                }));
-            }
-        }
-
-        private DelegateCommand _confCommand;
-        /// <summary>
-        /// 設定コマンドを取得します。
-        /// </summary>
-        public DelegateCommand ConfCommand
-        {
-            get
-            {
-                return this._confCommand ?? (this._confCommand = new DelegateCommand(_ =>
-                {
-                    // 別ウィンドウで設定を表示する
-                }));
-            }
-        }
     }
 }
