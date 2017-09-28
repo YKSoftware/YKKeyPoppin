@@ -1,9 +1,9 @@
 ﻿namespace YKKeyPoppin.Views
 {
     using System;
-using System.Windows;
-using System.Windows.Media.Animation;
-using YKKeyPoppin.Models;
+    using System.Windows;
+    using System.Windows.Media.Animation;
+    using YKKeyPoppin.Models;
 
     /// <summary>
     /// KeyView.xaml の相互作用ロジック
@@ -18,10 +18,21 @@ using YKKeyPoppin.Models;
         internal KeyView(KeyInfo info)
             :this()
         {
+            Poppin(info);
+        }
+
+        internal void Poppin(KeyInfo info)
+        {
             this._keyInfo = info;
             this.textblock.FontSize = 44;
             this.textblock.Foreground = System.Windows.Media.Brushes.Aqua;
             this.textblock.Text = info.ToString();
+            this.Loaded += OnLoaded;
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            this.Loaded -= OnLoaded;
             CreateAndStartAnimation();
         }
 
