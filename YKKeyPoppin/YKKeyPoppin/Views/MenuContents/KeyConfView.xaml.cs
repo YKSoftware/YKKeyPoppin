@@ -42,9 +42,12 @@
             switch ((YKToolkit.Controls.User32.WMs)msg)
             {
                 case YKToolkit.Controls.User32.WMs.WM_CHAR:
+                    var input = (byte)wParam.ToInt32();
+                    // ASCII で図形文字以外の場合は文字として受け付けない
+                    if ((input < 0x21) || (0x7e < input)) break;
+
                     if (this.InputCommand != null)
                     {
-                        var input = (byte)wParam.ToInt32();
                         var str = System.Text.Encoding.ASCII.GetString(new byte[] { input });
                         var info = new KeyInfo() { Key = this._key, ModifierKeys = this._modifierKeys };
                         var pair = new KeyValuePair<KeyInfo, string>(info, str);

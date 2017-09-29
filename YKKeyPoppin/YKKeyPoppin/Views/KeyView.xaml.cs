@@ -51,7 +51,7 @@
             {
                 From = this.Left,
                 To = this.Left + 2.0 * unit * (random.NextDouble() - 0.5),
-                Duration = new Duration(TimeSpan.FromMilliseconds(1000)),
+                Duration = new Duration(TimeSpan.FromMilliseconds(800)),
                 EasingFunction = new SineEase()
                 {
                     EasingMode = EasingMode.EaseInOut,
@@ -64,32 +64,38 @@
             {
                 From = this.Top,
                 To = this.Top - Settings.Current.Jump,
-                Duration = new Duration(TimeSpan.FromMilliseconds(1000)),
-                EasingFunction = new ElasticEase()
+                Duration = new Duration(TimeSpan.FromMilliseconds(400)),
+                //EasingFunction = new ElasticEase()
+                //{
+                //    EasingMode = EasingMode.EaseOut,
+                //    Oscillations = 1,
+                //    Springiness = 4,
+                //},
+                EasingFunction = new SineEase()
                 {
-                    EasingMode = EasingMode.EaseOut,
-                    Oscillations = 1,
-                    Springiness = 4,
+                    EasingMode = EasingMode.EaseInOut,
                 },
+                AutoReverse = true,
             };
             Storyboard.SetTarget(yMoveAnimation, this);
             Storyboard.SetTargetProperty(yMoveAnimation, new PropertyPath("Top"));
 
-            var opacityAnimation = new DoubleAnimation()
-            {
-                From = 1,
-                To = 0,
-                Duration = new Duration(TimeSpan.FromMilliseconds(300)),
-                BeginTime = TimeSpan.FromMilliseconds(400),
-            };
-            Storyboard.SetTarget(opacityAnimation, this);
-            Storyboard.SetTargetProperty(opacityAnimation, new PropertyPath("Opacity"));
+            // Opacity プロパティのアニメーションは動作がもっさりするのでマシンパワーが強いときだけ使ったほうがよい
+            //var opacityAnimation = new DoubleAnimation()
+            //{
+            //    From = 1,
+            //    To = 0,
+            //    Duration = new Duration(TimeSpan.FromMilliseconds(300)),
+            //    BeginTime = TimeSpan.FromMilliseconds(400),
+            //};
+            //Storyboard.SetTarget(opacityAnimation, this);
+            //Storyboard.SetTargetProperty(opacityAnimation, new PropertyPath("Opacity"));
+            //this._storyboard.Children.Add(opacityAnimation);
 
             this._storyboard.Children = new TimelineCollection()
             {
                 xMoveAnimation,
                 yMoveAnimation,
-                opacityAnimation,
             };
             this._storyboard.Begin(this);
         }
