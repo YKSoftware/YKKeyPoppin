@@ -15,15 +15,7 @@
 
         public override string ToString()
         {
-            if (this.Key.IsModifierKey()) return this.Key.ChangeString();
-
-            var str = "";
-            if (this.ModifierKeys.HasFlag(ModifierKeys.Control)) str += "Ctrl+";
-            if (this.ModifierKeys.HasFlag(ModifierKeys.Alt)) str += "Alt+";
-            if (this.ModifierKeys.HasFlag(ModifierKeys.Shift)) str += "Shift+";
-            if (this.ModifierKeys.HasFlag(ModifierKeys.Windows)) str += "Win+";
-            str += Key.ChangeString();
-            return str;
+            return this.GetString();
         }
     }
 }

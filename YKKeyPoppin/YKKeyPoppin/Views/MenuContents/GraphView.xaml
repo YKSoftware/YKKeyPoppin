@@ -6,6 +6,9 @@
              xmlns:c="clr-namespace:YKKeyPoppin.Views.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Foreground>
+        <SolidColorBrush Color="{DynamicResource ForegroundColor}" />
+    </UserControl.Foreground>
     <UserControl.Resources>
         <c:ValueToHeightConverter x:Key="ValueToHeightConverter" />
         <c:KeyInfoToKeyStringConverter x:Key="KeyInfoToKeyStringConverter" />
@@ -16,7 +19,7 @@
     <DockPanel>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="4">
             <TextBlock Text="Graph :" Margin="0,0,10,0" VerticalAlignment="Center" />
-            <CheckBox Content="ヒット数順" IsChecked="{Binding IsOrder}" Margin="0,0,4,0" VerticalAlignment="Center" />
+            <CheckBox Content="According to hits" IsChecked="{Binding IsOrder}" Margin="0,0,4,0" VerticalAlignment="Center" />
         </StackPanel>
         <ItemsControl ItemsSource="{Binding AggregatedKeys}">
             <ItemsControl.ItemsPanel>

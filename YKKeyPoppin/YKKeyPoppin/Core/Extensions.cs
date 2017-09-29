@@ -1,9 +1,10 @@
 ﻿namespace YKKeyPoppin
 {
     using System.Collections.Generic;
-using System.Timers;
-using System.Windows.Input;
-using YKToolkit.Controls;
+    using System.Timers;
+    using System.Windows.Input;
+    using YKKeyPoppin.Models;
+    using YKToolkit.Controls;
 
     internal static class Extensions
     {
@@ -47,19 +48,30 @@ using YKToolkit.Controls;
             return ModifierKeys.None;
         }
 
-        public static string GetString(this Dictionary<KeyInfo, string> dic, KeyInfo info)
+        public static string GetString(this KeyInfo info)
         {
             var keyOnly = new KeyInfo() { Key = info.Key };
-            if (dic.ContainsKey(info))
+            if (KeyConf.Current.ContainsKey(info))
             {
-                return dic[info];
+                return KeyConf.Current[info];
             }
-            else if ((info.ModifierKeys != ModifierKeys.None) && dic.ContainsKey(keyOnly))
+            else if (info.ModifierKeys == ModifierKeys.None)
             {
-                return info.ModifierKeys.ToString() + "+" + dic[keyOnly];
+                return info.Key.ChangeString();
             }
 
-            return info.Key.ChangeString();
+            return info.ChangeString();
+        }
+
+        public static string ChangeString(this KeyInfo info)
+        {
+            var str = "";
+            if (info.ModifierKeys.HasFlag(ModifierKeys.Control)) str += "Ctrl+";
+            if (info.ModifierKeys.HasFlag(ModifierKeys.Alt)) str += "Alt+";
+            if (info.ModifierKeys.HasFlag(ModifierKeys.Shift)) str += "Shift+";
+            if (info.ModifierKeys.HasFlag(ModifierKeys.Windows)) str += "Win+";
+            str += info.Key.ChangeString();
+            return str;
         }
 
         public static string ChangeString(this User32.VKs key)

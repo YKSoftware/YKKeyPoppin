@@ -9,7 +9,7 @@
     using YKToolkit.Bindings;
     using YKToolkit.Controls;
 
-    internal class GraphViewModel : NotificationObject
+    internal class GraphViewModel : NotificationObject, IMenuContentViewModel
     {
         public GraphViewModel()
         {
@@ -28,7 +28,7 @@
                 if (!this._isLoaded) return Enumerable.Empty<object>();
                 var maxHit = KeyCollector.Current.KeyCollection.Any() ? KeyCollector.Current.KeyCollection.Max(x => x.Value) : 0;
                 var keys = KeyCollector.Current.KeyCollection.Select(x => new { Key = x.Key, Value = x.Value, Ratio = (double)x.Value * 100.0 / (double)maxHit });;
-                return this.IsOrder ? keys.OrderByDescending(x => x.Value) : keys;
+                return this.IsOrder ? keys.OrderByDescending(x => x.Value) : keys.OrderBy(x => x.Key.Key);
             }
         }
 
@@ -53,7 +53,7 @@
             RaisePropertyChanged("AggregatedKeys");
         }
 
-        public void UnLoaded()
+        public void Unloaded()
         {
             if (!this._isLoaded) return;
 

@@ -5,7 +5,7 @@
     using YKKeyPoppin.Models;
     using YKToolkit.Bindings;
 
-    internal class Top5KeysViewModel : NotificationObject
+    internal class Top5KeysViewModel : NotificationObject, IMenuContentViewModel
     {
         public Top5KeysViewModel()
         {
@@ -21,6 +21,14 @@
             {
                 return KeyCollector.Current.KeyCollection.OrderByDescending(x => x.Value).Take(5).Select((x, i) => new KeyValuePair<int, KeyValuePair<KeyInfo, int>>(i + 1, x));
             }
+        }
+
+        public void Loaded()
+        {
+        }
+
+        public void Unloaded()
+        {
         }
     }
 }

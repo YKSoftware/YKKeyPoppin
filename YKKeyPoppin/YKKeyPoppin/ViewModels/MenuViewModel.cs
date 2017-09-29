@@ -1,18 +1,19 @@
 ﻿namespace YKKeyPoppin.ViewModels
 {
     using System.Collections.Generic;
-using YKKeyPoppin.Models;
-using YKToolkit.Bindings;
+    using YKKeyPoppin.Models;
+    using YKToolkit.Bindings;
 
     internal class MenuViewModel : NotificationObject
     {
         public MenuViewModel()
         {
-            this._viewModels = new List<object>()
+            this._viewModels = new List<IMenuContentViewModel>()
             {
                 this.Top5KeysViewModel,
                 //this.AggregationViewModel,
                 this.GraphViewModel,
+                this.KeyConfViewModel,
             };
 
             KeyHook.Current.KeyUp += OnKeyUp;
@@ -23,16 +24,23 @@ using YKToolkit.Bindings;
             RaisePropertyChanged("Top5Keys");
         }
 
-        private Top5KeysViewModel _top5KeysViewModel = new Top5KeysViewModel();
-        public Top5KeysViewModel Top5KeysViewModel { get { return this._top5KeysViewModel; } }
+        private IMenuContentViewModel _top5KeysViewModel = new Top5KeysViewModel();
+        public IMenuContentViewModel Top5KeysViewModel { get { return this._top5KeysViewModel; } }
 
-        private AggregationViewModel _aggregationViewModel = new AggregationViewModel();
-        public AggregationViewModel AggregationViewModel { get { return this._aggregationViewModel; } }
+        private IMenuContentViewModel _aggregationViewModel = new AggregationViewModel();
+        public IMenuContentViewModel AggregationViewModel { get { return this._aggregationViewModel; } }
 
-        private GraphViewModel _graphViewModel = new GraphViewModel();
-        public GraphViewModel GraphViewModel { get { return this._graphViewModel; } }
+        private IMenuContentViewModel _graphViewModel = new GraphViewModel();
+        public IMenuContentViewModel GraphViewModel { get { return this._graphViewModel; } }
 
-        private List<object> _viewModels;
+        private IMenuContentViewModel _keyConfViewModel = new KeyConfViewModel();
+        public IMenuContentViewModel KeyConfViewModel { get { return this._keyConfViewModel; } }
+
+        private IMenuContentViewModel PreviousViewModel { get; set; }
+
+        private List<IMenuContentViewModel> _viewModels;
+
+        private IMenuContentViewModel CurrentViewModel { get { return this._viewModels[this.SelectedIndex]; } }
 
         private int _selectedIndex;
         public int SelectedIndex
@@ -55,6 +63,7 @@ using YKToolkit.Bindings;
             {
                 return this._previousCommand ?? (this._previousCommand = new DelegateCommand(_ =>
                 {
+                    this.PreviousViewModel = this.CurrentViewModel;
                     this.IsNext = false;
                     this.SelectedIndex = this.SelectedIndex != 0 ? this.SelectedIndex - 1 : this._viewModels.Count - 1;
                 }));
@@ -68,6 +77,7 @@ using YKToolkit.Bindings;
             {
                 return this._nextCommand ?? (this._nextCommand = new DelegateCommand(_ =>
                 {
+                    this.PreviousViewModel = this.CurrentViewModel;
                     this.IsNext = true;
                     this.SelectedIndex = this.SelectedIndex < this._viewModels.Count - 1 ? this.SelectedIndex + 1 : 0;
                 }));
@@ -81,14 +91,10 @@ using YKToolkit.Bindings;
             {
                 return this._transitionCompletedCommand ?? (this._transitionCompletedCommand = new DelegateCommand(_ =>
                 {
-                    if (this._viewModels[this.SelectedIndex] == this.GraphViewModel)
-                    {
-                        this.GraphViewModel.Loaded();
-                    }
-                    else
-                    {
-                        this.GraphViewModel.UnLoaded();
-                    }
+                    if (this.PreviousViewModel != null) this.PreviousViewModel.Unloaded();
+                    this.PreviousViewModel = null;
+
+                    if (this.CurrentViewModel != null) this.CurrentViewModel.Loaded();
                 }));
             }
         }

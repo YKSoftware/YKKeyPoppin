@@ -30,7 +30,7 @@
         {
             var bound = Forms.Screen.PrimaryScreen.Bounds;
             this.Bounds = new Rect(new Point(bound.Left, bound.Top), new Size(bound.Width, bound.Height));
-            this.Jump = 400;
+            this.Jump = 300;
         }
 
         #endregion シングルトンクラス

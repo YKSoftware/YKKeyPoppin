@@ -72,6 +72,10 @@
                 <TabItem>
                     <vw:GraphView DataContext="{Binding GraphViewModel}" />
                 </TabItem>
+
+                <TabItem>
+                    <vw:KeyConfView DataContext="{Binding KeyConfViewModel}" InputCommand="{Binding InputCommand}" />
+                </TabItem>
             </TabControl>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">

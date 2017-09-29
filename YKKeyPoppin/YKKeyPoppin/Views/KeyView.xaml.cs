@@ -2,6 +2,7 @@
 {
     using System;
     using System.Windows;
+    using System.Windows.Media;
     using System.Windows.Media.Animation;
     using YKKeyPoppin.Models;
 
@@ -13,19 +14,20 @@
         public KeyView()
         {
             InitializeComponent();
+
+            this.textblock.Foreground = Brushes.Aqua;
         }
 
-        internal KeyView(KeyInfo info)
+        internal KeyView(bool isExtra)
             :this()
         {
-            Poppin(info);
+            if (isExtra) this.textblock.Foreground = Brushes.Chocolate;
         }
 
         internal void Poppin(KeyInfo info)
         {
             this._keyInfo = info;
             this.textblock.FontSize = 44;
-            this.textblock.Foreground = System.Windows.Media.Brushes.Aqua;
             this.textblock.Text = info.ToString();
             this.Loaded += OnLoaded;
         }

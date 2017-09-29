@@ -18,12 +18,17 @@
 
         private KeyCollector()
         {
-            LoadCollection();
+            //LoadCollection();
             KeyHook.Current.KeyUp += OnKeyUp;
         }
 
         private void OnKeyUp(KeyInfo info)
         {
+            if (info.Key.IsModifierKey())
+            {
+                var modifierKey = info.Key.ToModifierKeys();
+                info.ModifierKeys = info.ModifierKeys & ~modifierKey;
+            }
             if (!this._keyCollection.ContainsKey(info)) this._keyCollection.Add(info, 0);
             this._keyCollection[info]++;
 
@@ -84,27 +89,32 @@
 
         private void LoadCollection()
         {
-            FileStream stream = null;
-            try
+            var files = Directory.GetFiles(".", "*" + KeyHitCountFilePath);
+            if (files.Any())
             {
-                var files = Directory.GetFiles(".", "*" + KeyHitCountFilePath);
-                if (files.Any())
+                this.AllCollections = files.Select(x =>
                 {
-                    this.AllCollections = files.Select(x =>
+                    FileStream stream = null;
+                    try
                     {
                         stream = new FileStream(x, FileMode.Open, FileAccess.Read);
                         var serializer = new DataContractSerializer(typeof(Dictionary<KeyInfo, int>));
                         return serializer.ReadObject(stream) as Dictionary<KeyInfo, int>;
-                    }).ToArray();
-                }
-            }
-            finally
-            {
-                if (stream != null)
-                {
-                    stream.Dispose();
-                    stream = null;
-                }
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine(ex);
+                        return null;
+                    }
+                    finally
+                    {
+                        if (stream != null)
+                        {
+                            stream.Dispose();
+                            stream = null;
+                        }
+                    }
+                }).ToArray();
             }
         }
 

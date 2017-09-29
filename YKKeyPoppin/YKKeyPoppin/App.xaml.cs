@@ -1,10 +1,12 @@
 ﻿namespace YKKeyPoppin
 {
     using Microsoft.Win32;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Timers;
     using System.Windows;
+    using System.Windows.Threading;
     using YKKeyPoppin.Models;
     using YKKeyPoppin.ViewModels;
     using YKKeyPoppin.Views;
@@ -43,12 +45,17 @@
             {
                 if (this._keyViews.Count < 100)
                 {
-                    Enumerable.Range(0, 100 - this._keyViews.Count).ToList().ForEach(x =>
+                    this.Dispatcher.BeginInvoke((Action)(() =>
                     {
-                        this._keyViews.Add(new KeyView());
-                    });
+                        Enumerable.Range(0, 100 - this._keyViews.Count).ToList().ForEach(x =>
+                        {
+                            this._keyViews.Add(new KeyView());
+                        });
+                    }), DispatcherPriority.SystemIdle, null);
                 }
             };
+            this._keyViewTimer.Start();
+            KeyConf.Current.LoadConf();
             KeyCollector.Current.KeyUp += OnKeyUp;
 
             var w = new ComboView();
@@ -70,9 +77,8 @@
         /// <param name="info">Poppin' するキー情報</param>
         private void LetsPoppin(KeyInfo info)
         {
-            var w = this._keyViews.FirstOrDefault();
+            var w = this._keyViews.FirstOrDefault() ?? new KeyView(true);
             this._keyViews.Remove(w);
-            if (w == null) w = new KeyView();
             w.Poppin(info);
             w.Show();
         }
