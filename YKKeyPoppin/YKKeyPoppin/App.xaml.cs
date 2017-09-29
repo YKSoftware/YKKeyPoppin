@@ -80,7 +80,11 @@
             var w = this._keyViews.FirstOrDefault() ?? new KeyView(true);
             this._keyViews.Remove(w);
             w.Poppin(info);
-            w.Show();
+
+            this.Dispatcher.BeginInvoke((Action)(() =>
+            {
+                w.Show();
+            }), DispatcherPriority.SystemIdle, null);
         }
 
         /// <summary>
@@ -108,8 +112,9 @@
         /// </summary>
         public void End()
         {
-            WpfNotifyIcon.Dispose();
             KeyCollector.Current.SaveCollection();
+
+            WpfNotifyIcon.Dispose();
             this.Shutdown();
         }
     }
