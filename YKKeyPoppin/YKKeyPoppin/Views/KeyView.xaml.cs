@@ -4,6 +4,7 @@
     using System.Windows;
     using System.Windows.Media;
     using System.Windows.Media.Animation;
+    using System.Windows.Threading;
     using YKKeyPoppin.Models;
 
     /// <summary>
@@ -15,27 +16,31 @@
         {
             InitializeComponent();
 
-            this.textblock.Foreground = Brushes.Aqua;
+            this.IsVisibleChanged += OnIsVisibleChanged;
         }
 
-        internal KeyView(bool isExtra)
-            :this()
-        {
-            if (isExtra) this.textblock.Foreground = Brushes.Chocolate;
-        }
+        private static Brush normalForegroundBrush = Brushes.Aqua;
+        private static Brush extraForegroundBrush = Brushes.Chocolate;
 
-        internal void Poppin(KeyInfo info)
+        public bool IsBusy { get; private set; }
+
+        internal void Poppin(KeyInfo info, bool isExtra = false)
         {
+            this.IsBusy = true;
             this._keyInfo = info;
-            this.textblock.FontSize = 44;
+
             this.textblock.Text = info.ToString();
-            this.Loaded += OnLoaded;
+            if (isExtra) this.textblock.Foreground = extraForegroundBrush;
+            else this.textblock.Foreground = normalForegroundBrush;
+            this.Show();
         }
 
-        private void OnLoaded(object sender, RoutedEventArgs e)
+        private void OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            this.Loaded -= OnLoaded;
-            CreateAndStartAnimation();
+            if ((bool)e.NewValue)
+            {
+                CreateAndStartAnimation();
+            }
         }
 
         private void CreateAndStartAnimation()
@@ -97,6 +102,7 @@
                 xMoveAnimation,
                 yMoveAnimation,
             };
+            this._storyboard.FillBehavior = FillBehavior.Stop;
             this._storyboard.Begin(this);
         }
 
@@ -106,7 +112,8 @@
             {
                 this._storyboard.Completed -= OnCompleted;
                 this._storyboard = null;
-                this.Close();
+                this.Hide();
+                this.IsBusy = false;
             }));
         }
 

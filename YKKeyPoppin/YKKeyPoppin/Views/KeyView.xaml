@@ -11,7 +11,7 @@
         Topmost="True"
         ShowActivated="False"
         >
-    <TextBlock x:Name="textblock" Margin="10">
+    <TextBlock x:Name="textblock" Margin="10" FontSize="44">
         <TextBlock.BitmapEffect>
             <DropShadowBitmapEffect Color="Black" ShadowDepth="4" />
         </TextBlock.BitmapEffect>

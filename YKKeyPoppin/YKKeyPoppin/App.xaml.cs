@@ -22,6 +22,8 @@
         /// </summary>
         public static App Instance { get; private set; }
 
+        private const int MaxViewCount = 255;
+
         /// <summary>
         /// 起動時のイベントハンドラ
         /// </summary>
@@ -43,11 +45,11 @@
             // 出庫した分のインスタンスを倉庫に詰め直す
             this._keyViewTimer.Elapsed += (_, __) =>
             {
-                if (this._keyViews.Count < 100)
+                if (this._keyViews.Count < MaxViewCount)
                 {
                     this.Dispatcher.BeginInvoke((Action)(() =>
                     {
-                        Enumerable.Range(0, 100 - this._keyViews.Count).ToList().ForEach(x =>
+                        Enumerable.Range(0, MaxViewCount - this._keyViews.Count).ToList().ForEach(x =>
                         {
                             this._keyViews.Add(new KeyView());
                         });
@@ -77,14 +79,10 @@
         /// <param name="info">Poppin' するキー情報</param>
         private void LetsPoppin(KeyInfo info)
         {
-            var w = this._keyViews.FirstOrDefault() ?? new KeyView(true);
-            this._keyViews.Remove(w);
-            w.Poppin(info);
-
-            this.Dispatcher.BeginInvoke((Action)(() =>
-            {
-                w.Show();
-            }), DispatcherPriority.SystemIdle, null);
+            var w = this._keyViews.FirstOrDefault(x => x.IsBusy == false);
+            var isExtra = w == null;
+            if (isExtra) w = new KeyView();
+            w.Poppin(info, isExtra);
         }
 
         /// <summary>

@@ -6,22 +6,38 @@
     using System.Linq;
     using System.Runtime.Serialization;
 
-    [DataContract(Namespace = "YKKeyPoppin")]
+    /// <summary>
+    /// キー収集をおこなうクラスを表します。
+    /// </summary>
+    [DataContract(Namespace = "YKKeyPoppin.Models")]
     internal class KeyCollector
     {
+        /// <summary>
+        /// 現在のインスタンスを取得します。
+        /// </summary>
         public static KeyCollector Current { get; private set; }
 
+        /// <summary>
+        /// 静的なコンストラクタを表します。
+        /// </summary>
         static KeyCollector()
         {
             Current = new KeyCollector();
         }
 
+        /// <summary>
+        /// プライベートなコンストラクタを定義することで外部からのインスタンス生成を抑止します。
+        /// </summary>
         private KeyCollector()
         {
             //LoadCollection();
             KeyHook.Current.KeyUp += OnKeyUp;
         }
 
+        /// <summary>
+        /// KeyHook.KeyUp イベントハンドラ
+        /// </summary>
+        /// <param name="info">離されたキーの情報を指定します。</param>
         private void OnKeyUp(KeyInfo info)
         {
             if (info.Key.IsModifierKey())
@@ -32,42 +48,48 @@
             if (!this._keyCollection.ContainsKey(info)) this._keyCollection.Add(info, 0);
             this._keyCollection[info]++;
 
-            this.LatestKeys.Remove(this.LatestKeys.LastOrDefault());
-            this.LatestKeys.Insert(0, info);
-
             RaiseKeyUp(info);
         }
 
+        /// <summary>
+        /// 過去に収集したすべてのデータを取得します。
+        /// </summary>
         public IEnumerable<Dictionary<KeyInfo, int>> AllCollections { get; private set; }
 
         private Dictionary<KeyInfo, int> _keyCollection = new Dictionary<KeyInfo, int>();
+        /// <summary>
+        /// 現在収集しているすべてのデータを取得します。
+        /// </summary>
         [DataMember]
         public Dictionary<KeyInfo, int> KeyCollection
         {
             get { return this._keyCollection; }
         }
 
-        private List<KeyInfo> _latestKeys = new List<KeyInfo>(5);
-        public List<KeyInfo> LatestKeys
-        {
-            get { return this._latestKeys; }
-        }
-
-        public IEnumerable<KeyValuePair<KeyInfo, int>> LatestKeyInfo
-        {
-            get { return this.LatestKeys.Count > 0 ? this.LatestKeys.Select(x => new KeyValuePair<KeyInfo, int>(x, this.KeyCollection[x])) : Enumerable.Empty<KeyValuePair<KeyInfo, int>>(); }
-        }
-
+        /// <summary>
+        /// KeyUp イベントハンドラのデリゲート
+        /// </summary>
+        /// <param name="info"></param>
         internal delegate void KeyUpHandler(KeyInfo info);
 
+        /// <summary>
+        /// キーを離したときに発生します。
+        /// </summary>
         public event KeyUpHandler KeyUp;
 
+        /// <summary>
+        /// KeyUp イベントを発行します。
+        /// </summary>
+        /// <param name="info"></param>
         private void RaiseKeyUp(KeyInfo info)
         {
             var h = this.KeyUp;
             if (h != null) h(info);
         }
 
+        /// <summary>
+        /// 収集データを保存します。
+        /// </summary>
         public void SaveCollection()
         {
             FileStream stream = null;
@@ -76,6 +98,19 @@
                 stream = new FileStream(DateTime.Now.ToString("yyyyMMddHHmmss") + KeyHitCountFilePath, FileMode.Create, FileAccess.Write);
                 var serializer = new DataContractSerializer(typeof(Dictionary<KeyInfo, int>));
                 serializer.WriteObject(stream, this.KeyCollection);
+            }
+            catch (Exception ex)
+            {
+                if (stream != null)
+                {
+                    stream.Dispose();
+                }
+                stream = new FileStream("log.txt", FileMode.Create, FileAccess.Write);
+                using (var writer = new StreamWriter(stream))
+                {
+                    stream = null;
+                    writer.Write(ex);
+                }
             }
             finally
             {
@@ -87,6 +122,9 @@
             }
         }
 
+        /// <summary>
+        /// これまでの収集データを読み込みます。
+        /// </summary>
         private void LoadCollection()
         {
             var files = Directory.GetFiles(".", "*" + KeyHitCountFilePath);
@@ -118,6 +156,9 @@
             }
         }
 
+        /// <summary>
+        /// 収集データのファイル拡張子
+        /// </summary>
         public const string KeyHitCountFilePath = ".hitkeys";
     }
 }

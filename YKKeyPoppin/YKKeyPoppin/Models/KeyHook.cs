@@ -4,15 +4,27 @@
     using System.Windows.Input;
     using YKToolkit.Controls;
 
+    /// <summary>
+    /// キーボードフックをおこなうクラスを表します。
+    /// </summary>
     internal class KeyHook
     {
+        /// <summary>
+        /// 現在のインスタンスを取得します。
+        /// </summary>
         public static KeyHook Current { get; private set; }
 
+        /// <summary>
+        /// 静的なコンストラクタ
+        /// </summary>
         static KeyHook()
         {
             Current = new KeyHook();
         }
 
+        /// <summary>
+        /// プライベートはコンストラクタを定義することで外部からのインスタンス生成を抑止します。
+        /// </summary>
         private KeyHook()
         {
             this._keyHook.KeyDown += OnKeyDown;
@@ -79,10 +91,22 @@
             this._downKeys.Remove(key);
         }
 
+        /// <summary>
+        /// KeyUp イベントハンドラのデリゲート
+        /// </summary>
+        /// <param name="info"></param>
         internal delegate void KeyUpHandler(KeyInfo info);
 
+        /// <summary>
+        /// キーが離されたときに発生します。
+        /// </summary>
         public event KeyUpHandler KeyUp;
 
+        /// <summary>
+        /// KeyUp イベントを発行します。
+        /// </summary>
+        /// <param name="key">キーを指定します。</param>
+        /// <param name="modifierKeys">修飾キーを指定します。</param>
         private void RaiseKeyUp(User32.VKs key, ModifierKeys modifierKeys)
         {
             var h = this.KeyUp;
