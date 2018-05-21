@@ -33,7 +33,7 @@
             base.OnStartup(e);
             Instance = this;
 
-            SystemEvents.SessionEnding += OnSessionEnding;
+            this.SessionEnding += OnSessionEnding;
             this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             ThemeManager.Instance.Initialize();
 
@@ -100,7 +100,7 @@
         /// </summary>
         /// <param name="sender">イベント発行元</param>
         /// <param name="e">イベント引数</param>
-        private void OnSessionEnding(object sender, SessionEndingEventArgs e)
+        private void OnSessionEnding(object sender, SessionEndingCancelEventArgs e)
         {
             End();
         }
