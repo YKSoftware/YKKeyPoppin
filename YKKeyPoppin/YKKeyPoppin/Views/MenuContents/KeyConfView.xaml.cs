@@ -25,13 +25,33 @@
                 if (this._hasHooked) return;
                 var w = Window.GetWindow(this);
                 var handle = (new WindowInteropHelper(w)).Handle;
-                // メッセージ処理をフック
-                var hwndSource = HwndSource.FromHwnd(handle);
-                hwndSource.AddHook(WndProc);
-                this._hasHooked = true;
+                this._hwndSource = HwndSource.FromHwnd(handle);
             };
+
+            this.IsVisibleChanged += (_, e) => HookMessage((bool)e.NewValue);
         }
 
+        private void HookMessage(bool isHook)
+        {
+            if (this._hwndSource == null)
+                throw new InvalidOperationException();
+
+            if (isHook)
+            {
+                if (!this._hasHooked)
+                    this._hwndSource.AddHook(WndProc);
+            }
+            else
+            {
+                if (this._hasHooked)
+                    this._hwndSource.RemoveHook(WndProc);
+            }
+
+            this._hasHooked = isHook;
+            System.Diagnostics.Debug.WriteLine(this._hasHooked);
+        }
+
+        private HwndSource _hwndSource;
         private bool _hasHooked;
 
         private YKToolkit.Controls.User32.VKs _key;

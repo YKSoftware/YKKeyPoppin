@@ -313,6 +313,8 @@ using System.Windows.Media.Animation;
                 storyboard.Completed += (_, __) =>
                 {
                     if (this.CompletedCommand.CanExecute(null)) this.CompletedCommand.Execute(null);
+                    if (this.State == TransitionStates.DisplayA) this.ContentB = null;
+                    if (this.State == TransitionStates.DisplayB) this.ContentA = null;
                     storyboard = null;
                 };
             }

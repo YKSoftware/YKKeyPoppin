@@ -49,6 +49,7 @@
             this._comboTimer.Stop();
             this.Combo = 0;
             this.Chain = 0;
+            this._isChain = false;
         }
 
         /// <summary>
