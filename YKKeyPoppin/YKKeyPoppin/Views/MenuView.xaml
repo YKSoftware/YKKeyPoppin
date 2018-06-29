@@ -65,12 +65,12 @@
                     <vw:Top5KeysView DataContext="{Binding Top5KeysViewModel}" />
                 </TabItem>
 
-                <!--<TabItem>
-                    <vw:AggregationView DataContext="{Binding AggregationViewModel}" />
-                </TabItem>-->
-
                 <TabItem>
                     <vw:GraphView DataContext="{Binding GraphViewModel}" />
+                </TabItem>
+
+                <TabItem>
+                    <vw:MouseInfoView DataContext="{Binding MouseInfoViewModel}" />
                 </TabItem>
 
                 <TabItem>

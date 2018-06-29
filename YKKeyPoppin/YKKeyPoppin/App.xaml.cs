@@ -1,6 +1,5 @@
 ﻿namespace YKKeyPoppin
 {
-    using Microsoft.Win32;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -63,6 +62,13 @@
             var w = new ComboView();
             w.DataContext = new ComboViewModel();
             w.Show();
+
+            // DPI 取得
+            var dpiXProperty = typeof(SystemParameters).GetProperty("DpiX", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+            var dpiYProperty = typeof(SystemParameters).GetProperty("Dpi", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+            this.DpiX = (int)dpiXProperty.GetValue(null, null);
+            this.DpiY = (int)dpiYProperty.GetValue(null, null);
+            this.MinimumDistance = new User32.POINT(1, 1).CalcDistance(new User32.POINT());
         }
 
         /// <summary>
@@ -111,9 +117,15 @@
         public void End()
         {
             KeyCollector.Current.SaveCollection();
+            MouseCollector.Current.Save();
 
             WpfNotifyIcon.Dispose();
             this.Shutdown();
         }
+
+        public int DpiX { get; private set; }
+        public int DpiY { get; private set; }
+
+        public double MinimumDistance { get; private set; }
     }
 }

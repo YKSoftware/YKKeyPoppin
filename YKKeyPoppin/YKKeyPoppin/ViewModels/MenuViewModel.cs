@@ -11,8 +11,8 @@
             this._viewModels = new List<IMenuContentViewModel>()
             {
                 this.Top5KeysViewModel,
-                //this.AggregationViewModel,
                 this.GraphViewModel,
+                this.MouseInfoViewModel,
                 this.KeyConfViewModel,
             };
 
@@ -27,11 +27,11 @@
         private IMenuContentViewModel _top5KeysViewModel = new Top5KeysViewModel();
         public IMenuContentViewModel Top5KeysViewModel { get { return this._top5KeysViewModel; } }
 
-        private IMenuContentViewModel _aggregationViewModel = new AggregationViewModel();
-        public IMenuContentViewModel AggregationViewModel { get { return this._aggregationViewModel; } }
-
         private IMenuContentViewModel _graphViewModel = new GraphViewModel();
         public IMenuContentViewModel GraphViewModel { get { return this._graphViewModel; } }
+
+        private IMenuContentViewModel _mouseInfoViewModel = new MouseInfoViewModel();
+        public IMenuContentViewModel MouseInfoViewModel { get { return this._mouseInfoViewModel; } }
 
         private IMenuContentViewModel _keyConfViewModel = new KeyConfViewModel();
         public IMenuContentViewModel KeyConfViewModel { get { return this._keyConfViewModel; } }

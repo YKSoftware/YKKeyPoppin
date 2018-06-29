@@ -70,10 +70,11 @@
     <Compile Include="Models\KeyCollector.cs" />
     <Compile Include="Models\KeyConf.cs" />
     <Compile Include="Models\KeyHook.cs" />
+    <Compile Include="Models\MouseCollector.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Core\Extensions.cs" />
     <Compile Include="Models\KeyInfo.cs" />
-    <Compile Include="ViewModels\AggregationViewModel.cs" />
+    <Compile Include="ViewModels\MouseInfoViewModel.cs" />
     <Compile Include="ViewModels\ComboViewModel.cs" />
     <Compile Include="ViewModels\GraphViewModel.cs" />
     <Compile Include="ViewModels\IMenuContentViewModel.cs" />
@@ -85,9 +86,6 @@
     <Compile Include="Views\Converters\ValueToHeightConverter.cs" />
     <Compile Include="Views\MenuContents\GraphView.xaml.cs">
       <DependentUpon>GraphView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\MenuContents\AggregationView.xaml.cs">
-      <DependentUpon>AggregationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Behaviors\ToolWindowBehavior.cs" />
     <Compile Include="Views\ComboView.xaml.cs">
@@ -105,6 +103,9 @@
     <Compile Include="Views\Componets\WpfNotifyIcon.cs" />
     <Compile Include="Views\MenuContents\KeyConfView.xaml.cs">
       <DependentUpon>KeyConfView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MenuContents\MouseInfoView.xaml.cs">
+      <DependentUpon>MouseInfoView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MenuView.xaml.cs">
       <DependentUpon>MenuView.xaml</DependentUpon>
@@ -148,10 +149,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\MenuContents\AggregationView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\ComboView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -165,6 +162,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\MenuContents\KeyConfView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MenuContents\MouseInfoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

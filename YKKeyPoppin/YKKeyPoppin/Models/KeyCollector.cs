@@ -95,7 +95,8 @@
             FileStream stream = null;
             try
             {
-                stream = new FileStream(DateTime.Now.ToString("yyyyMMddHHmmss") + KeyHitCountFilePath, FileMode.Create, FileAccess.Write);
+                if (!Directory.Exists(KeyHitCountFileDirectory)) Directory.CreateDirectory(KeyHitCountFileDirectory);
+                stream = new FileStream(KeyHitCountFileDirectory + "\\" + DateTime.Now.ToString("yyyyMMddHHmmss") + KeyHitCountFileExtension, FileMode.Create, FileAccess.Write);
                 var serializer = new DataContractSerializer(typeof(Dictionary<KeyInfo, int>));
                 serializer.WriteObject(stream, this.KeyCollection);
             }
@@ -127,7 +128,7 @@
         /// </summary>
         private void LoadCollection()
         {
-            var files = Directory.GetFiles(".", "*" + KeyHitCountFilePath);
+            var files = Directory.GetFiles(KeyHitCountFileDirectory, "*" + KeyHitCountFileExtension);
             if (files.Any())
             {
                 this.AllCollections = files.Select(x =>
@@ -157,8 +158,13 @@
         }
 
         /// <summary>
+        /// 収集データ保存先フォルダ名
+        /// </summary>
+        public const string KeyHitCountFileDirectory = "hitkeys";
+
+        /// <summary>
         /// 収集データのファイル拡張子
         /// </summary>
-        public const string KeyHitCountFilePath = ".hitkeys";
+        public const string KeyHitCountFileExtension = ".hitkeys";
     }
 }

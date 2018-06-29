@@ -1,5 +1,6 @@
 ﻿namespace YKKeyPoppin
 {
+    using System;
     using System.Collections.Generic;
     using System.Timers;
     using System.Windows.Input;
@@ -12,6 +13,13 @@
         {
             timer.Stop();
             timer.Start();
+        }
+
+        public static double CalcDistance(this User32.POINT pt1, User32.POINT pt2)
+        {
+            var x = Math.Abs(pt1.X - pt2.X) / (double)App.Instance.DpiX * 2.54 / 100.0;
+            var y = Math.Abs(pt1.Y - pt2.Y) / (double)App.Instance.DpiY * 2.54 / 100.0;
+            return Math.Sqrt(x * x + y * y);
         }
 
         public static bool IsModifierKey(this User32.VKs key)
@@ -46,6 +54,50 @@
             if (key == User32.VKs.VK_RWIN) return ModifierKeys.Windows;
 
             return ModifierKeys.None;
+        }
+
+        public static bool IsTypingChar(this KeyInfo keyInfo)
+        {
+            switch (keyInfo.Key)
+            {
+                case User32.VKs.VK_LSHIFT:
+                case User32.VKs.VK_RSHIFT:
+                case User32.VKs.VK_LCONTROL:
+                case User32.VKs.VK_RCONTROL:
+                case User32.VKs.VK_LMENU:
+                case User32.VKs.VK_RMENU:
+                case User32.VKs.VK_LWIN:
+                case User32.VKs.VK_RWIN:
+                case User32.VKs.VK_RETURN:
+                case User32.VKs.VK_TAB:
+                case User32.VKs.VK_INSERT:
+                case User32.VKs.VK_KANA:
+                case User32.VKs.VK_KANJI:
+                case User32.VKs.VK_HOME:
+                case User32.VKs.VK_END:
+                case User32.VKs.VK_PAUSE:
+                case User32.VKs.VK_NEXT:
+                case User32.VKs.VK_PRIOR:
+                case User32.VKs.VK_PRINT:
+                case User32.VKs.VK_SCROLL:
+                case User32.VKs.VK_LEFT:
+                case User32.VKs.VK_UP:
+                case User32.VKs.VK_RIGHT:
+                case User32.VKs.VK_DOWN:
+                case User32.VKs.VK_DELETE:
+                case User32.VKs.VK_BACK:
+                case User32.VKs.VK_ESCAPE:
+                    return false;
+            }
+
+            if (keyInfo.ModifierKeys.HasFlag(ModifierKeys.Alt))
+                return false;
+            if (keyInfo.ModifierKeys.HasFlag(ModifierKeys.Control))
+                return false;
+            if (keyInfo.ModifierKeys.HasFlag(ModifierKeys.Windows))
+                return false;
+
+            return true;
         }
 
         public static string GetString(this KeyInfo info)

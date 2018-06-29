@@ -20,6 +20,7 @@
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="4">
             <TextBlock Text="Graph :" Margin="0,0,10,0" VerticalAlignment="Center" />
             <CheckBox Content="According to hits" IsChecked="{Binding IsOrder}" Margin="0,0,4,0" VerticalAlignment="Center" />
+            <CheckBox Content="Only Char-Key" IsChecked="{Binding IsExcept}" Margin="0,0,4,0" VerticalAlignment="Center" />
         </StackPanel>
         <ItemsControl ItemsSource="{Binding AggregatedKeys}">
             <ItemsControl.ItemsPanel>

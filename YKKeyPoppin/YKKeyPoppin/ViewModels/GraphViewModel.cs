@@ -27,7 +27,8 @@
             {
                 if (!this._isLoaded) return Enumerable.Empty<object>();
                 var maxHit = KeyCollector.Current.KeyCollection.Any() ? KeyCollector.Current.KeyCollection.Max(x => x.Value) : 0;
-                var keys = KeyCollector.Current.KeyCollection.Select(x => new { Key = x.Key, Value = x.Value, Ratio = (double)x.Value * 100.0 / (double)maxHit });;
+                var keys = KeyCollector.Current.KeyCollection.Select(x => new { Key = x.Key, Value = x.Value, Ratio = (double)x.Value * 100.0 / (double)maxHit });
+                if (this.IsExcept) keys = keys.Where(x => x.Key.IsTypingChar());
                 return this.IsOrder ? keys.OrderByDescending(x => x.Value) : keys.OrderBy(x => x.Key.Key);
             }
         }
@@ -39,6 +40,19 @@
             set
             {
                 if (SetProperty(ref this._isOrder, value))
+                {
+                    RaisePropertyChanged("AggregatedKeys");
+                }
+            }
+        }
+
+        private bool _isExcept;
+        public bool IsExcept
+        {
+            get { return this._isExcept; }
+            set
+            {
+                if (SetProperty(ref this._isExcept, value))
                 {
                     RaisePropertyChanged("AggregatedKeys");
                 }

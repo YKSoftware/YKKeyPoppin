@@ -3,11 +3,11 @@
     using System.Windows.Controls;
 
     /// <summary>
-    /// AggregationView.xaml の相互作用ロジック
+    /// MouseInfoView.xaml の相互作用ロジック
     /// </summary>
-    public partial class AggregationView : UserControl
+    public partial class MouseInfoView : UserControl
     {
-        public AggregationView()
+        public MouseInfoView()
         {
             InitializeComponent();
         }
