@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Timers;
     using System.Windows;
@@ -32,30 +33,34 @@
             base.OnStartup(e);
             Instance = this;
 
+            this.DispatcherUnhandledException += OnDispatcherUnhandledException;
+
             this.SessionEnding += OnSessionEnding;
             this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             ThemeManager.Instance.Initialize();
 
             // KeyView のインスタンスを倉庫に詰める
-            Enumerable.Range(0, 100).ToList().ForEach(x =>
+            Enumerable.Range(0, MaxViewCount).ToList().ForEach(x =>
             {
                 this._keyViews.Add(new KeyView());
             });
+
             // 出庫した分のインスタンスを倉庫に詰め直す
-            this._keyViewTimer.Elapsed += (_, __) =>
-            {
-                if (this._keyViews.Count < MaxViewCount)
-                {
-                    this.Dispatcher.BeginInvoke((Action)(() =>
-                    {
-                        Enumerable.Range(0, MaxViewCount - this._keyViews.Count).ToList().ForEach(x =>
-                        {
-                            this._keyViews.Add(new KeyView());
-                        });
-                    }), DispatcherPriority.SystemIdle, null);
-                }
-            };
-            this._keyViewTimer.Start();
+            //this._keyViewTimer.Elapsed += (_, __) =>
+            //{
+            //    if (this._keyViews.Count < MaxViewCount)
+            //    {
+            //        this.Dispatcher.BeginInvoke((Action)(() =>
+            //        {
+            //            Enumerable.Range(0, MaxViewCount - this._keyViews.Count).ToList().ForEach(x =>
+            //            {
+            //                this._keyViews.Add(new KeyView());
+            //            });
+            //        }), DispatcherPriority.SystemIdle, null);
+            //    }
+            //};
+            //this._keyViewTimer.Start();
+
             KeyConf.Current.LoadConf();
             KeyCollector.Current.KeyUp += OnKeyUp;
 
@@ -69,6 +74,23 @@
             this.DpiX = (int)dpiXProperty.GetValue(null, null);
             this.DpiY = (int)dpiYProperty.GetValue(null, null);
             this.MinimumDistance = new User32.POINT(1, 1).CalcDistance(new User32.POINT());
+        }
+
+        /// <summary>
+        /// DispatcherUnhandledException イベントハンドラ
+        /// </summary>
+        /// <param name="sender">イベント発行元</param>
+        /// <param name="e">イベント引数</param>
+        private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            var str = string.Concat(new string[]
+            {
+                "[DispatcherUnhandledException : " + DateTime.Now.ToString() + Environment.NewLine,
+                e.Exception.ToString() + Environment.NewLine,
+            });
+            File.AppendAllText("log.txt", str);
+            e.Handled = true;
+            this.Shutdown();
         }
 
         /// <summary>
@@ -94,7 +116,7 @@
         /// <summary>
         /// KeyView のインスタンスの倉庫
         /// </summary>
-        private List<KeyView> _keyViews = new List<KeyView>(100);
+        private List<KeyView> _keyViews = new List<KeyView>(MaxViewCount);
 
         /// <summary>
         /// KeyView インスタンス補充タイマー

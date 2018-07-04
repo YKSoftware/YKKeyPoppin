@@ -12,6 +12,12 @@
     /// </summary>
     public partial class KeyView : Window
     {
+        static KeyView()
+        {
+            normalForegroundBrush.Freeze();
+            extraForegroundBrush.Freeze();
+        }
+
         public KeyView()
         {
             InitializeComponent();
