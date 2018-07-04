@@ -90,7 +90,7 @@
             });
             File.AppendAllText("log.txt", str);
             e.Handled = true;
-            this.Shutdown();
+            End();
         }
 
         /// <summary>
