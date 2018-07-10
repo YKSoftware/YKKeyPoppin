@@ -23,6 +23,22 @@
             }
         }
 
+        private bool _isPoppinEnabled = true;
+        /// <summary>
+        /// Let's Poppin' するかどうかを取得または設定します。
+        /// </summary>
+        public bool IsPoppinEnabled
+        {
+            get { return this._isPoppinEnabled; }
+            set
+            {
+                if (SetProperty(ref this._isPoppinEnabled, value))
+                {
+                    (App.Current as App).IsPoppinEnabled = this._isPoppinEnabled;
+                }
+            }
+        }
+
         public void Loaded()
         {
         }

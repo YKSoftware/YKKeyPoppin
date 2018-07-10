@@ -9,7 +9,10 @@
         <SolidColorBrush Color="{DynamicResource ForegroundColor}" />
     </UserControl.Foreground>
     <DockPanel>
-        <TextBlock DockPanel.Dock="Top" Text="Top 5 Keys :" Margin="4" />
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="4">
+            <TextBlock Text="Top 5 Keys :" Margin="4,0,10,0" VerticalAlignment="Center" />
+            <CheckBox Content="Enable Poppin'" IsChecked="{Binding IsPoppinEnabled}" Margin="0,0,4,0" VerticalAlignment="Center" />
+        </StackPanel>
         <ItemsControl ItemsSource="{Binding Top5Keys}" Margin="6,0">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>

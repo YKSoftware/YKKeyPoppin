@@ -37,7 +37,7 @@
 
             this.SessionEnding += OnSessionEnding;
             this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
-            ThemeManager.Instance.Initialize();
+            this.IsPoppinEnabled = true;
 
             // KeyView のインスタンスを倉庫に詰める
             Enumerable.Range(0, MaxViewCount).ToList().ForEach(x =>
@@ -107,10 +107,13 @@
         /// <param name="info">Poppin' するキー情報</param>
         private void LetsPoppin(KeyInfo info)
         {
-            var w = this._keyViews.FirstOrDefault(x => x.IsBusy == false);
-            var isExtra = w == null;
-            if (isExtra) w = new KeyView();
-            w.Poppin(info, isExtra);
+            if (this.IsPoppinEnabled)
+            {
+                var w = this._keyViews.FirstOrDefault(x => x.IsBusy == false);
+                var isExtra = w == null;
+                if (isExtra) w = new KeyView();
+                w.Poppin(info, isExtra);
+            }
         }
 
         /// <summary>
@@ -149,5 +152,7 @@
         public int DpiY { get; private set; }
 
         public double MinimumDistance { get; private set; }
+
+        public bool IsPoppinEnabled { get; set; }
     }
 }
