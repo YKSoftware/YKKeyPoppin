@@ -99,6 +99,18 @@
             }
         }
 
+        private DelegateCommand _logCommand;
+        public DelegateCommand LogCommand
+        {
+            get
+            {
+                return this._logCommand ?? (this._logCommand = new DelegateCommand(_ =>
+                {
+                    (App.Current as App).ShowLog();
+                }));
+            }
+        }
+
         private DelegateCommand _changeThemeCommand;
         public DelegateCommand ChangeThemeCommand
         {

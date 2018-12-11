@@ -30,7 +30,7 @@
         /// </summary>
         private KeyCollector()
         {
-            //LoadCollection();
+            LoadCollection();
             KeyHook.Current.KeyUp += OnKeyUp;
         }
 
@@ -54,7 +54,7 @@
         /// <summary>
         /// 過去に収集したすべてのデータを取得します。
         /// </summary>
-        public IEnumerable<Dictionary<KeyInfo, int>> AllCollections { get; private set; }
+        public IEnumerable<KeyLogData> AllCollections { get; private set; }
 
         private Dictionary<KeyInfo, int> _keyCollection = new Dictionary<KeyInfo, int>();
         /// <summary>
@@ -131,14 +131,34 @@
             var files = Directory.GetFiles(KeyHitCountFileDirectory, "*" + KeyHitCountFileExtension);
             if (files.Any())
             {
+
                 this.AllCollections = files.Select(x =>
                 {
+                    var filename = Path.GetFileNameWithoutExtension(x);
+                    var dateTimeString = string.Concat(new string[]
+                    {
+                        filename.Substring(0, 4),
+                        "/",
+                        filename.Substring(4, 2),
+                        "/",
+                        filename.Substring(6, 2),
+                        //" ",
+                        //filename.Substring(8, 2),     // 日付だけにして時刻は無視する
+                        //":",
+                        //filename.Substring(10, 2),
+                        //":",
+                        //filename.Substring(12, 2),
+                    });
+                    DateTime datetime;
+                    DateTime.TryParse(dateTimeString, out datetime);
+                    Dictionary<KeyInfo, int> log = null;
+
                     FileStream stream = null;
                     try
                     {
                         stream = new FileStream(x, FileMode.Open, FileAccess.Read);
                         var serializer = new DataContractSerializer(typeof(Dictionary<KeyInfo, int>));
-                        return serializer.ReadObject(stream) as Dictionary<KeyInfo, int>;
+                        log = serializer.ReadObject(stream) as Dictionary<KeyInfo, int>;
                     }
                     catch (Exception ex)
                     {
@@ -153,7 +173,10 @@
                             stream = null;
                         }
                     }
-                }).ToArray();
+
+                    return new KeyLogData(datetime, log);
+                }).GroupBy(x => x.DateTime).Select(x => x.Aggregate((x1, x2) => x1 + x2))   // 同一日付のログデータを集約する
+                .ToArray();
             }
         }
 
@@ -166,5 +189,39 @@
         /// 収集データのファイル拡張子
         /// </summary>
         public const string KeyHitCountFileExtension = ".hitkeys";
+    }
+
+    internal class KeyLogData
+    {
+        public KeyLogData(DateTime datetime, Dictionary<KeyInfo, int> log)
+        {
+            this.DateTime = datetime;
+            this.Log = log;
+        }
+
+        public int TotalHits { get { return this.Log.Sum(x => x.Value); } }
+        public DateTime DateTime { get; private set; }
+        public Dictionary<KeyInfo, int> Log { get; private set; }
+
+        public static KeyLogData operator +(KeyLogData x, KeyLogData y)
+        {
+            if (x.DateTime != y.DateTime)
+                return null;
+
+            var newLog = x.Log;
+            foreach (var log in y.Log)
+            {
+                if (newLog.ContainsKey(log.Key))
+                {
+                    newLog[log.Key] += log.Value;
+                }
+                else
+                {
+                    newLog.Add(log.Key, log.Value);
+                }
+            }
+
+            return new KeyLogData(x.DateTime, newLog);
+        }
     }
 }

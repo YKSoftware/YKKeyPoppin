@@ -26,6 +26,10 @@
         /// </summary>
         private MouseCollector()
         {
+            // デザインモードでは実行しない
+            if ((bool)System.ComponentModel.DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(System.Windows.DependencyObject)).DefaultValue)
+                return;
+
             this._mouseHook.MouseMove += OnMouseMove;
             this._mouseHook.MouseLeftButtonUp += OnMouseLeftButtonUp;
             this._mouseHook.MouseRightButtonUp += OnMouseRightButtonUp;

@@ -74,6 +74,7 @@
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Core\Extensions.cs" />
     <Compile Include="Models\KeyInfo.cs" />
+    <Compile Include="ViewModels\LogViewModel.cs" />
     <Compile Include="ViewModels\MouseInfoViewModel.cs" />
     <Compile Include="ViewModels\ComboViewModel.cs" />
     <Compile Include="ViewModels\GraphViewModel.cs" />
@@ -84,6 +85,9 @@
     <Compile Include="Views\Converters\KeyInfoToKeyStringConverter.cs" />
     <Compile Include="Views\Converters\ModifierKeyInKeyInfoToVisibilityConverter.cs" />
     <Compile Include="Views\Converters\ValueToHeightConverter.cs" />
+    <Compile Include="Views\LogView.xaml.cs">
+      <DependentUpon>LogView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MenuContents\GraphView.xaml.cs">
       <DependentUpon>GraphView.xaml</DependentUpon>
     </Compile>
@@ -145,6 +149,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\LogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MenuContents\GraphView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

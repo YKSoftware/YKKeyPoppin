@@ -18,8 +18,11 @@
 
         private void OnKeyUp(KeyInfo info)
         {
+            RaisePropertyChanged("TotalHits");
             RaisePropertyChanged("AggregatedKeys");
         }
+
+        public int TotalHits { get { return KeyCollector.Current.KeyCollection.Sum(x => x.Value); } }
 
         public IEnumerable<object> AggregatedKeys
         {
