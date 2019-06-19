@@ -10,6 +10,7 @@
         SizeToContent="WidthAndHeight"
         Topmost="True"
         ShowActivated="False"
+        IsHitTestVisible="False"
         >
     <TextBlock x:Name="textblock" Margin="10" FontSize="44">
         <TextBlock.BitmapEffect>

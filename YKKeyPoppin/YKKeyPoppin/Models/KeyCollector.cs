@@ -132,7 +132,7 @@
             if (files.Any())
             {
 
-                this.AllCollections = files.Select(x =>
+                this.AllCollections = files.Reverse().Select(x =>
                 {
                     var filename = Path.GetFileNameWithoutExtension(x);
                     var dateTimeString = string.Concat(new string[]

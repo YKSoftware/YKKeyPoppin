@@ -17,14 +17,15 @@
            RestoreButtonVisibility="Collapsed">
     <DataGrid ItemsSource="{Binding AllLog}"
               AutoGenerateColumns="False"
-              YKb:DataGridBehavior.DisplayRowNumber="1">
+              YKb:DataGridBehavior.DisplayRowNumber="1"
+              SelectionMode="Single">
         <DataGrid.Columns>
-            <DataGridTextColumn Header="Date" Binding="{Binding DateTime, StringFormat='{}yyyy/MM/dd'}" IsReadOnly="True" />
+            <DataGridTextColumn Header="Date" Binding="{Binding DateTime, StringFormat='{}yyyy/MM/dd'}" IsReadOnly="True" Width="*" />
+            <DataGridTextColumn Header="Total Hits" Binding="{Binding TotalHits}" IsReadOnly="True" />
         </DataGrid.Columns>
         <DataGrid.RowDetailsTemplate>
             <DataTemplate>
                 <StackPanel HorizontalAlignment="Left">
-                    <TextBlock Text="{Binding TotalHits, StringFormat='{}Total Hits : {0}'}" />
                     <DataGrid ItemsSource="{Binding Log}"
                               Width="200"
                               MaxHeight="240"
@@ -33,7 +34,7 @@
                               YKb:DataGridBehavior.DisplayRowNumber="1">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Key" Binding="{Binding Key}" IsReadOnly="True" />
-                            <DataGridTextColumn Header="Hits" Binding="{Binding Value}" IsReadOnly="True" />
+                            <DataGridTextColumn Header="Hits" Binding="{Binding Value}" IsReadOnly="True" Width="*" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </StackPanel>

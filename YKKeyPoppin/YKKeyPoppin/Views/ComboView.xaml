@@ -12,6 +12,7 @@
         Background="Transparent"
         SizeToContent="WidthAndHeight"
         Topmost="True"
+        IsHitTestVisible="False"
         >
     <Window.Resources>
         <c:ComboToBrushConverter x:Key="ComboToBrushConverter" />
