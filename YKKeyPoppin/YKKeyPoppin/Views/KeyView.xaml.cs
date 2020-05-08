@@ -4,7 +4,6 @@
     using System.Windows;
     using System.Windows.Media;
     using System.Windows.Media.Animation;
-    using System.Windows.Threading;
     using YKKeyPoppin.Models;
 
     /// <summary>
@@ -25,8 +24,8 @@
             this.IsVisibleChanged += OnIsVisibleChanged;
         }
 
-        private static Brush normalForegroundBrush = Brushes.Aqua;
-        private static Brush extraForegroundBrush = Brushes.Chocolate;
+        private readonly static Brush normalForegroundBrush = Brushes.Aqua;
+        private readonly static Brush extraForegroundBrush = Brushes.Chocolate;
 
         public bool IsBusy { get; private set; }
 
@@ -125,7 +124,7 @@
 
         private KeyInfo _keyInfo;
 
-        private static Random random = new Random();
+        private readonly static Random random = new Random();
 
         private Storyboard _storyboard;
     }
