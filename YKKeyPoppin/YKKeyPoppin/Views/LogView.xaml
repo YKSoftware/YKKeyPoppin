@@ -26,7 +26,7 @@
         <DataGrid.RowDetailsTemplate>
           <DataTemplate>
             <StackPanel HorizontalAlignment="Left">
-              <DataGrid ItemsSource="{Binding Log}" Width="200" MaxHeight="240" Margin="0,0,0,10" AutoGenerateColumns="False" YKb:DataGridBehavior.DisplayRowNumber="1">
+              <DataGrid ItemsSource="{Binding Log}" Width="200" MaxHeight="240" Margin="0,0,0,10" YKb:DataGridBehavior.DisplayRowNumber="1" IsReadOnly="True" AutoGenerateColumns="False" CanUserSortColumns="True">
                 <DataGrid.Columns>
                   <DataGridTextColumn Header="Key" Binding="{Binding Key}" IsReadOnly="True" />
                   <DataGridTextColumn Header="Hits" Binding="{Binding Value}" IsReadOnly="True" Width="*" />
