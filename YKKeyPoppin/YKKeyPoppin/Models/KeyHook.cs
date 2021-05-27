@@ -36,9 +36,10 @@
         /// キーボードが押されたときのグローバルフック
         /// </summary>
         /// <param name="key">押されたキー</param>
-        private void OnKeyDown(User32.VKs key)
+        /// <returns>ハンドリング完了の場合に true を返します。</returns>
+        private bool OnKeyDown(User32.VKs key)
         {
-            if (this._downKeys.Contains(key)) return;
+            if (this._downKeys.Contains(key)) return false;
 
             if (key.IsModifierKey())
             {
@@ -53,13 +54,16 @@
 
             this._modifierKeys |= key.ToModifierKeys();
             this._downKeys.Add(key);
+
+            return false;
         }
 
         /// <summary>
         /// キーボードが離されたときのグローバルフック
         /// </summary>
         /// <param name="key">離されたキー</param>
-        private void OnKeyUp(User32.VKs key)
+        /// <returns>ハンドリング完了の場合に true を返します。</returns>
+        private bool OnKeyUp(User32.VKs key)
         {
             this._modifierKeys &= ~(key.ToModifierKeys());
 
@@ -89,6 +93,8 @@
             }
 
             this._downKeys.Remove(key);
+
+            return false;
         }
 
         /// <summary>
