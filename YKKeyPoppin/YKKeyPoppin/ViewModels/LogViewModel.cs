@@ -20,16 +20,19 @@
                 Maximum = max,
                 MajorStep = (max - min) / 10.0,
                 GridLabelVisibility = System.Windows.Visibility.Collapsed,
+                Title = "",
             };
 
             var yValues = this.AllLog.Select(x => (double)x.TotalHits);
-            min = ((long)yValues.Min() / 100) * 100;
-            max = ((long)yValues.Max() / 100) * 100 + 100;
+            min = ((long)yValues.Min() / 500) * 500;
+            max = ((long)yValues.Max() / 500) * 500 + 500;
             this.YAxisSettings = new AxisSettings()
             {
                 Minimum = min,
                 Maximum = max,
                 MajorStep = (max - min) / 10.0,
+                StringFormat = "#,##0",
+                Title = "",
             };
         }
 

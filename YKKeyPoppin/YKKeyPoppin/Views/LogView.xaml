@@ -39,7 +39,10 @@
     </TabItem>
 
     <TabItem Header="グラフ">
-      <YK:LineGraph IsLegendEnabled="False" XAxisSettings="{Binding XAxisSettings}" YAxisSettings="{Binding YAxisSettings}">
+      <YK:LineGraph GraphTitle="Total Hits" IsLegendEnabled="False" XAxisSettings="{Binding XAxisSettings}" YAxisSettings="{Binding YAxisSettings}">
+        <YK:LineGraph.Y2AxisSettings>
+          <YK:AxisSettings Title="" IsMajorGridEnabled="False" />
+        </YK:LineGraph.Y2AxisSettings>
         <YK:LineGraph.GraphDataCollection>
           <x:Array Type="{x:Type YK:LineGraphData}">
             <YK:LineGraphData XData="{Binding XData}" YData="{Binding YData}" />
