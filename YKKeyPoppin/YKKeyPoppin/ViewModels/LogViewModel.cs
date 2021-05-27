@@ -46,6 +46,22 @@
         /// </summary>
         public IEnumerable<KeyLogData> AllLog { get { return KeyCollector.Current.AllCollections; } }
 
+        public Dictionary<KeyInfo, int> AllLogByKeyInfo
+        {
+            get
+            {
+                return KeyCollector.Current.AllCollections.Select(x => x.Log).Aggregate((x, y) =>
+                {
+                    foreach (var z in y)
+                    {
+                        if (x.ContainsKey(z.Key)) x[z.Key] += z.Value;
+                        else x.Add(z.Key, z.Value);
+                    }
+                    return x;
+                });
+            }
+        }
+
         public AxisSettings XAxisSettings { get; private set; }
         public AxisSettings YAxisSettings { get; private set; }
         public double[] XData { get { return this.AllLog.Select(x => (double)x.DateTime.ToBinary()).ToArray(); } }

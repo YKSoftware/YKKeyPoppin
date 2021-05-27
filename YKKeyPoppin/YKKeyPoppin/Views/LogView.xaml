@@ -17,7 +17,7 @@
            RestoreButtonVisibility="Collapsed">
   <TabControl>
 
-    <TabItem Header="集計">
+    <TabItem Header="日別集計">
       <DataGrid ItemsSource="{Binding AllLog}" YKb:DataGridBehavior.DisplayRowNumber="1" IsReadOnly="True" SelectionMode="Single" CanUserSortColumns="True">
         <DataGrid.Columns>
           <DataGridTextColumn Header="Date" Binding="{Binding DateTime, StringFormat='{}yyyy/MM/dd'}" IsReadOnly="True" Width="*" />
@@ -35,6 +35,16 @@
             </StackPanel>
           </DataTemplate>
         </DataGrid.RowDetailsTemplate>
+      </DataGrid>
+    </TabItem>
+
+    <TabItem Header="キー別集計">
+      <DataGrid ItemsSource="{Binding AllLogByKeyInfo}" YKb:DataGridBehavior.DisplayRowNumber="1" IsReadOnly="True" SelectionMode="Single" CanUserSortColumns="True">
+        <DataGrid.Columns>
+          <DataGridTextColumn Header="Key" Binding="{Binding Key}" Width="*" CanUserSort="False" />
+          <DataGridTextColumn Header="Key Name" Binding="{Binding Key.Key}" Width="*" CanUserSort="False" />
+          <DataGridTextColumn Header="Total Hits" Binding="{Binding Value}" />
+        </DataGrid.Columns>
       </DataGrid>
     </TabItem>
 
