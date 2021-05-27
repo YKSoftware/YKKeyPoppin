@@ -15,22 +15,38 @@
            MaximizeButtonVisibility="Collapsed"
            MinimizeButtonVisibility="Collapsed"
            RestoreButtonVisibility="Collapsed">
-  <DataGrid ItemsSource="{Binding AllLog}" AutoGenerateColumns="False" YKb:DataGridBehavior.DisplayRowNumber="1" SelectionMode="Single">
-    <DataGrid.Columns>
-      <DataGridTextColumn Header="Date" Binding="{Binding DateTime, StringFormat='{}yyyy/MM/dd'}" IsReadOnly="True" Width="*" />
-      <DataGridTextColumn Header="Total Hits" Binding="{Binding TotalHits}" IsReadOnly="True" />
-    </DataGrid.Columns>
-    <DataGrid.RowDetailsTemplate>
-      <DataTemplate>
-        <StackPanel HorizontalAlignment="Left">
-          <DataGrid ItemsSource="{Binding Log}" Width="200" MaxHeight="240" Margin="0,0,0,10" AutoGenerateColumns="False" YKb:DataGridBehavior.DisplayRowNumber="1">
-            <DataGrid.Columns>
-              <DataGridTextColumn Header="Key" Binding="{Binding Key}" IsReadOnly="True" />
-              <DataGridTextColumn Header="Hits" Binding="{Binding Value}" IsReadOnly="True" Width="*" />
-            </DataGrid.Columns>
-          </DataGrid>
-        </StackPanel>
-      </DataTemplate>
-    </DataGrid.RowDetailsTemplate>
-  </DataGrid>
+  <TabControl>
+
+    <TabItem Header="集計">
+      <DataGrid ItemsSource="{Binding AllLog}" AutoGenerateColumns="False" YKb:DataGridBehavior.DisplayRowNumber="1" SelectionMode="Single">
+        <DataGrid.Columns>
+          <DataGridTextColumn Header="Date" Binding="{Binding DateTime, StringFormat='{}yyyy/MM/dd'}" IsReadOnly="True" Width="*" />
+          <DataGridTextColumn Header="Total Hits" Binding="{Binding TotalHits}" IsReadOnly="True" />
+        </DataGrid.Columns>
+        <DataGrid.RowDetailsTemplate>
+          <DataTemplate>
+            <StackPanel HorizontalAlignment="Left">
+              <DataGrid ItemsSource="{Binding Log}" Width="200" MaxHeight="240" Margin="0,0,0,10" AutoGenerateColumns="False" YKb:DataGridBehavior.DisplayRowNumber="1">
+                <DataGrid.Columns>
+                  <DataGridTextColumn Header="Key" Binding="{Binding Key}" IsReadOnly="True" />
+                  <DataGridTextColumn Header="Hits" Binding="{Binding Value}" IsReadOnly="True" Width="*" />
+                </DataGrid.Columns>
+              </DataGrid>
+            </StackPanel>
+          </DataTemplate>
+        </DataGrid.RowDetailsTemplate>
+      </DataGrid>
+    </TabItem>
+
+    <TabItem Header="グラフ">
+      <YK:LineGraph IsLegendEnabled="False" XAxisSettings="{Binding XAxisSettings}" YAxisSettings="{Binding YAxisSettings}">
+        <YK:LineGraph.GraphDataCollection>
+          <x:Array Type="{x:Type YK:LineGraphData}">
+            <YK:LineGraphData XData="{Binding XData}" YData="{Binding YData}" />
+          </x:Array>
+        </YK:LineGraph.GraphDataCollection>
+      </YK:LineGraph>
+    </TabItem>
+
+  </TabControl>
 </YK:Window>
