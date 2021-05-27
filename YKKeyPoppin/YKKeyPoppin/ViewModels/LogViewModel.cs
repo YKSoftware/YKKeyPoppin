@@ -50,7 +50,7 @@
         {
             get
             {
-                return KeyCollector.Current.AllCollections.Select(x => x.Log).Aggregate((x, y) =>
+                return KeyCollector.Current.AllCollections.Select(x => x.Log).Aggregate(new Dictionary<KeyInfo, int>(), (x, y) =>
                 {
                     foreach (var z in y)
                     {
