@@ -15,30 +15,22 @@
            MaximizeButtonVisibility="Collapsed"
            MinimizeButtonVisibility="Collapsed"
            RestoreButtonVisibility="Collapsed">
-    <DataGrid ItemsSource="{Binding AllLog}"
-              AutoGenerateColumns="False"
-              YKb:DataGridBehavior.DisplayRowNumber="1"
-              SelectionMode="Single">
-        <DataGrid.Columns>
-            <DataGridTextColumn Header="Date" Binding="{Binding DateTime, StringFormat='{}yyyy/MM/dd'}" IsReadOnly="True" Width="*" />
-            <DataGridTextColumn Header="Total Hits" Binding="{Binding TotalHits}" IsReadOnly="True" />
-        </DataGrid.Columns>
-        <DataGrid.RowDetailsTemplate>
-            <DataTemplate>
-                <StackPanel HorizontalAlignment="Left">
-                    <DataGrid ItemsSource="{Binding Log}"
-                              Width="200"
-                              MaxHeight="240"
-                              Margin="0,0,0,10"
-                              AutoGenerateColumns="False"
-                              YKb:DataGridBehavior.DisplayRowNumber="1">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Key" Binding="{Binding Key}" IsReadOnly="True" />
-                            <DataGridTextColumn Header="Hits" Binding="{Binding Value}" IsReadOnly="True" Width="*" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </StackPanel>
-            </DataTemplate>
-        </DataGrid.RowDetailsTemplate>
-    </DataGrid>
+  <DataGrid ItemsSource="{Binding AllLog}" AutoGenerateColumns="False" YKb:DataGridBehavior.DisplayRowNumber="1" SelectionMode="Single">
+    <DataGrid.Columns>
+      <DataGridTextColumn Header="Date" Binding="{Binding DateTime, StringFormat='{}yyyy/MM/dd'}" IsReadOnly="True" Width="*" />
+      <DataGridTextColumn Header="Total Hits" Binding="{Binding TotalHits}" IsReadOnly="True" />
+    </DataGrid.Columns>
+    <DataGrid.RowDetailsTemplate>
+      <DataTemplate>
+        <StackPanel HorizontalAlignment="Left">
+          <DataGrid ItemsSource="{Binding Log}" Width="200" MaxHeight="240" Margin="0,0,0,10" AutoGenerateColumns="False" YKb:DataGridBehavior.DisplayRowNumber="1">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="Key" Binding="{Binding Key}" IsReadOnly="True" />
+              <DataGridTextColumn Header="Hits" Binding="{Binding Value}" IsReadOnly="True" Width="*" />
+            </DataGrid.Columns>
+          </DataGrid>
+        </StackPanel>
+      </DataTemplate>
+    </DataGrid.RowDetailsTemplate>
+  </DataGrid>
 </YK:Window>
